@@ -1,8 +1,3 @@
-variable "aws_region" {
-  description = "AWS region"
-  type        = string
-}
-
 variable "project" {
   description = "Project name"
   type        = string
@@ -31,4 +26,9 @@ variable "private_subnet_cidrs" {
 variable "availability_zones" {
   description = "Availability zones"
   type        = list(string)
+}
+
+variable "common_tags" {
+  description = "Common tags"
+  type        = map(string)
 }
