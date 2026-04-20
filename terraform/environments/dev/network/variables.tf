@@ -32,3 +32,9 @@ variable "availability_zones" {
   description = "Availability zones"
   type        = list(string)
 }
+
+variable "app_port" {
+  description = "Application port (ALB to EKS node)"
+  type        = number
+  default     = 8080
+}

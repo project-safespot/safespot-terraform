@@ -17,3 +17,23 @@ output "vpc_cidr" {
   description = "VPC CIDR block"
   value       = module.vpc.vpc_cidr
 }
+
+output "alb_sg_id" {
+  value = module.sg.alb_sg_id
+}
+
+output "eks_cluster_sg_id" {
+  value = module.sg.eks_cluster_sg_id
+}
+
+output "eks_node_sg_id" {
+  value = module.sg.eks_node_sg_id
+}
+
+output "rds_sg_id" {
+  value = module.sg.rds_sg_id
+}
+
+output "redis_sg_id" {
+  value = module.sg.redis_sg_id
+}
