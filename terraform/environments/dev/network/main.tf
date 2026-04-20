@@ -11,3 +11,14 @@ module "vpc" {
 
   common_tags = local.common_tags
 }
+
+module "sg" {
+  source = "../../../modules/network/sg"
+
+  project     = var.project
+  environment = var.environment
+  vpc_id      = module.vpc.vpc_id
+  app_port    = var.app_port
+
+  common_tags = local.common_tags
+}
