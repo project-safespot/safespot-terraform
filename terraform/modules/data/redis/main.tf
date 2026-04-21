@@ -26,7 +26,7 @@ resource "aws_elasticache_parameter_group" "main" {
 # ElastiCache Replication Group (master 1 + replica 4 = 총 5대)
 resource "aws_elasticache_replication_group" "main" {
   replication_group_id = "${var.project}-${var.environment}-data-redis-main"
-  description          = "Redis master 1 + replica 4 / auto failover for ${var.project} ${var.environment}"
+  description          = "Redis master 1 + replica 3 / auto failover for ${var.project} ${var.environment}"
 
   engine_version = var.engine_version
   node_type      = var.node_type
