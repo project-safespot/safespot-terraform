@@ -141,8 +141,8 @@ resource "aws_security_group_rule" "eks_node_from_cluster" {
 resource "aws_security_group_rule" "eks_node_to_rds" {
   type                     = "egress"
   description              = "EKS node to RDS"
-  from_port                = 5432
-  to_port                  = 5432
+  from_port                = 3306
+  to_port                  = 3306
   protocol                 = "tcp"
   security_group_id        = aws_security_group.eks_node.id
   source_security_group_id = aws_security_group.rds.id
@@ -151,8 +151,8 @@ resource "aws_security_group_rule" "eks_node_to_rds" {
 resource "aws_security_group_rule" "rds_from_eks" {
   type                     = "ingress"
   description              = "EKS node to RDS"
-  from_port                = 5432
-  to_port                  = 5432
+  from_port                = 3306
+  to_port                  = 3306
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds.id
   source_security_group_id = aws_security_group.eks_node.id
