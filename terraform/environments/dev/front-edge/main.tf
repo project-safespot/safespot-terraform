@@ -7,3 +7,23 @@ module "route53" {
 
   common_tags = local.common_tags
 }
+
+module "acm" {
+  source = "../../../modules/front-edge/acm"
+
+  providers = {
+    aws.us_east_1 = aws.us_east_1
+  }
+
+  domain_name     = var.domain_name
+  route53_zone_id = module.route53.zone_id
+  tags            = local.common_tags
+}
+
+# module "waf" {
+#   source = "../../../modules/front-edge/waf"
+#
+#   project     = var.project
+#   environment = var.environment
+#   common_tags = local.common_tags
+# }
