@@ -8,7 +8,7 @@ variable "environment" {
   type        = string
 }
 
-variable "private_subnet_ids" {
+variable "private_db_subnet_ids" {
   description = "Private subnet IDs"
   type        = list(string)
 }
