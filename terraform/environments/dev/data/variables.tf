@@ -89,9 +89,9 @@ variable "redis_node_type" {
 }
 
 variable "redis_num_cache_clusters" {
-  description = "Total Redis nodes (master 1 + replica 4 = 5)"
+  description = "Total Redis nodes (master 1 + replica 3 = 4)"
   type        = number
-  default     = 5
+  default     = 4
 }
 
 variable "redis_snapshot_retention_limit" {
