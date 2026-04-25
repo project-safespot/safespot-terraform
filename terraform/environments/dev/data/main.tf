@@ -13,7 +13,7 @@ module "rds" {
   project     = var.project
   environment = var.environment
 
-  private_db_subnet_ids = data.terraform_remote_state.network.outputs.private_db_subnet_ids
+  private_subnet_ids = data.terraform_remote_state.network.outputs.private_db_subnet_ids
   rds_sg_id          = data.terraform_remote_state.network.outputs.rds_sg_id
   availability_zones = var.availability_zones
 
@@ -38,7 +38,7 @@ module "redis" {
   project     = var.project
   environment = var.environment
 
-  private_subnet_ids = data.terraform_remote_state.network.outputs.private_subnet_ids
+  private_subnet_ids = data.terraform_remote_state.network.outputs.private_db_subnet_ids
   redis_sg_id        = data.terraform_remote_state.network.outputs.redis_sg_id
 
   engine_version           = var.redis_engine_version
