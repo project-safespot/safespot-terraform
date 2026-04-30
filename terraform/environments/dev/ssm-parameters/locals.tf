@@ -3,10 +3,10 @@ locals {
 
   common_tags = {
     Project     = var.project
-    Environment = var.environment
+    Environment = var.env
     Domain      = local.domain
     ManagedBy   = "terraform"
     Service     = var.project
-    CostCenter  = "${var.project}-${var.environment}"
+    CostCenter  = "${var.project}-${var.env}"
   }
 }
