@@ -50,7 +50,7 @@ resource "aws_cloudfront_distribution" "main" {
   # Origin 2 — ALB (API)
   origin {
     origin_id   = "ALB-api"
-    domain_name = var.alb_dns_name
+    domain_name = var.api_origin_domain_name
 
     custom_origin_config {
       http_port              = 80
@@ -228,5 +228,18 @@ resource "aws_cloudfront_cache_policy" "air" {
     }
     enable_accept_encoding_gzip   = true
     enable_accept_encoding_brotli = true
+  }
+}
+
+# Route53 A record — safespot.site → CloudFront
+resource "aws_route53_record" "cloudfront" {
+  zone_id = var.route53_zone_id
+  name    = var.domain_name
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.main.domain_name
+    zone_id                = aws_cloudfront_distribution.main.hosted_zone_id
+    evaluate_target_health = false
   }
 }

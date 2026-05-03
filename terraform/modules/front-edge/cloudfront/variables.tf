@@ -38,8 +38,8 @@ variable "waf_acl_arn" {
   type        = string
 }
 
-variable "alb_dns_name" {
-  description = "ALB DNS 이름 (api-service 파트 apply 후 remote_state로 참조)"
+variable "api_origin_domain_name" {
+  description = "CloudFront API origin 도메인 (api-origin.safespot.site)"
   type        = string
 }
 
