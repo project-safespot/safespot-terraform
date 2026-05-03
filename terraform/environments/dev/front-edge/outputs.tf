@@ -36,6 +36,11 @@ output "frontend_bucket_domain" {
 #   value       = module.acm_alb.certificate_arn
 # }
 
+# output "waf_acl_arn" {
+#   description = "WAF ACL ARN (ops 파트 CloudWatch 알람 타겟용)"
+#   value       = module.waf.waf_acl_arn
+# }
+
 # output "cloudfront_distribution_id" {
 #   description = "CloudFront Distribution ID"
 #   value       = module.cloudfront.distribution_id
