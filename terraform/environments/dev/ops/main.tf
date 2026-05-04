@@ -1,0 +1,212 @@
+data "terraform_remote_state" "network" {
+  backend = "s3"
+
+  config = {
+    bucket = local.remote_state_bucket
+    key    = "${var.env}/network/terraform.tfstate"
+    region = local.remote_state_region
+  }
+}
+
+data "terraform_remote_state" "api_service" {
+  backend = "s3"
+
+  config = {
+    bucket = local.remote_state_bucket
+    key    = "${var.env}/api-service/terraform.tfstate"
+    region = local.remote_state_region
+  }
+}
+
+data "terraform_remote_state" "data_layer" {
+  backend = "s3"
+
+  config = {
+    bucket = local.remote_state_bucket
+    key    = "${var.env}/data/terraform.tfstate"
+    region = local.remote_state_region
+  }
+}
+
+data "terraform_remote_state" "async_worker" {
+  backend = "s3"
+
+  config = {
+    bucket = local.remote_state_bucket
+    key    = "${var.env}/async-worker/terraform.tfstate"
+    region = local.remote_state_region
+  }
+}
+
+data "terraform_remote_state" "front_edge" {
+  backend = "s3"
+
+  config = {
+    bucket = local.remote_state_bucket
+    key    = "${var.env}/front-edge/terraform.tfstate"
+    region = local.remote_state_region
+  }
+}
+
+locals {
+  alb_arn_suffix          = try(data.terraform_remote_state.network.outputs.alb_arn_suffix, "")
+  target_group_arn_suffix = try(data.terraform_remote_state.network.outputs.target_group_arn_suffix, "")
+  nat_gateway_id          = try(data.terraform_remote_state.network.outputs.nat_gateway_id, "")
+
+  alb_log_bucket_name = (
+    var.alb_log_bucket_name != ""
+    ? var.alb_log_bucket_name
+    : try(data.terraform_remote_state.network.outputs.alb_log_bucket_name, "")
+  )
+
+  rds_cluster_identifier = try(data.terraform_remote_state.data_layer.outputs.rds_cluster_identifier, "")
+  redis_cluster_id       = try(data.terraform_remote_state.data_layer.outputs.redis_cluster_id, "")
+
+  sqs_queues = {
+    cache_refresh = try(data.terraform_remote_state.async_worker.outputs.sqs_queue_name_cache_refresh, "")
+    readmodel     = try(data.terraform_remote_state.async_worker.outputs.sqs_queue_name_readmodel, "")
+    env_cache     = try(data.terraform_remote_state.async_worker.outputs.sqs_queue_name_env_cache, "")
+    dlq           = try(data.terraform_remote_state.async_worker.outputs.sqs_dlq_name, "")
+  }
+
+  lambda_function_name = try(data.terraform_remote_state.async_worker.outputs.lambda_function_name, "")
+
+  lambda_reserved_concurrent_executions = try(
+    data.terraform_remote_state.async_worker.outputs.lambda_reserved_concurrent_executions,
+    0
+  )
+
+  lambda_concurrent_executions_threshold = (
+    local.lambda_reserved_concurrent_executions > 0
+    ? floor(local.lambda_reserved_concurrent_executions * 0.8)
+    : 80
+  )
+
+  eks_cluster_name      = try(data.terraform_remote_state.api_service.outputs.eks_cluster_name, "")
+  eks_oidc_provider_url = try(data.terraform_remote_state.api_service.outputs.eks_oidc_provider_url, "")
+  eks_oidc_provider_arn = try(data.terraform_remote_state.api_service.outputs.eks_oidc_provider_arn, "")
+
+  cloudfront_distribution_id = (
+    var.cloudfront_distribution_id != ""
+    ? var.cloudfront_distribution_id
+    : try(data.terraform_remote_state.front_edge.outputs.cloudfront_distribution_id, "")
+  )
+
+  waf_acl_name = (
+    var.waf_acl_name != ""
+    ? var.waf_acl_name
+    : try(data.terraform_remote_state.front_edge.outputs.waf_acl_name, "")
+  )
+}
+
+module "ecr" {
+  source = "../../../modules/ops/ecr"
+
+  project              = local.project
+  env                  = var.env
+  domain               = local.domain
+  services             = local.services
+  image_tag_mutability = var.image_tag_mutability
+  scan_on_push         = var.scan_on_push
+  max_image_count      = var.max_image_count
+  untagged_expiry_days = var.untagged_expiry_days
+}
+
+module "alerting" {
+  source = "../../../modules/ops/alerting"
+
+  env                                = var.env
+  alert_email                        = var.alert_email
+  additional_email_subscriptions     = var.additional_email_subscriptions
+  slack_webhook_secret_name          = var.slack_webhook_secret_name
+  enable_slack_secret                = var.enable_slack_secret
+  slack_webhook_recovery_window_days = var.slack_webhook_recovery_window_days
+}
+
+module "cloudwatch" {
+  source = "../../../modules/ops/cloudwatch"
+
+  providers = {
+    aws           = aws
+    aws.us_east_1 = aws.us_east_1
+  }
+
+  env           = var.env
+  sns_topic_arn = module.alerting.sns_topic_arn
+
+  alb_arn_suffix       = local.alb_arn_suffix
+  alb_5xx_threshold    = var.alb_5xx_threshold
+  alb_4xx_threshold    = var.alb_4xx_threshold
+  alb_latency_threshold = var.alb_latency_threshold_seconds
+
+  rds_cluster_identifier              = local.rds_cluster_identifier
+  rds_cpu_threshold                   = var.rds_cpu_threshold
+  rds_connections_threshold           = var.rds_connections_threshold
+  rds_free_storage_threshold_bytes    = var.rds_free_storage_threshold_bytes
+
+  redis_cluster_id                 = local.redis_cluster_id
+  redis_cpu_threshold              = var.redis_cpu_threshold
+  redis_evictions_threshold        = var.redis_evictions_threshold
+  redis_curr_connections_threshold = var.redis_curr_connections_threshold
+  redis_memory_threshold           = var.redis_memory_threshold
+  rds_replica_lag_threshold_ms  = var.rds_replica_lag_threshold_ms
+  rds_volume_bytes_threshold    = var.rds_volume_bytes_threshold
+
+  redis_freeable_memory_threshold_bytes = var.redis_freeable_memory_threshold_bytes
+  redis_bytes_used_threshold_bytes      = var.redis_bytes_used_threshold_bytes
+
+  sqs_queue_names           = local.sqs_queues
+  sqs_visible_threshold     = var.sqs_visible_threshold
+  sqs_age_threshold_seconds = var.sqs_age_threshold_seconds
+  dlq_visible_threshold     = var.dlq_visible_threshold
+  dlq_age_threshold_seconds = var.dlq_age_threshold_seconds
+
+  lambda_function_name                   = local.lambda_function_name
+  lambda_error_threshold                 = var.lambda_error_threshold
+  lambda_throttle_threshold              = var.lambda_throttle_threshold
+  lambda_duration_threshold_ms           = var.lambda_duration_p99_threshold_ms
+  lambda_concurrent_executions_threshold = local.lambda_concurrent_executions_threshold
+
+  eks_cluster_name            = local.eks_cluster_name
+  eks_pod_restart_threshold   = var.eks_pod_restart_threshold
+  eks_node_cpu_threshold      = var.eks_node_cpu_threshold
+  eks_node_memory_threshold   = var.eks_node_memory_threshold
+
+  cloudfront_distribution_id = local.cloudfront_distribution_id
+  waf_acl_name               = local.waf_acl_name
+}
+
+module "log_groups" {
+  source = "../../../modules/ops/log-groups"
+
+  env                              = var.env
+  services                         = local.services
+  retention_days                   = local.log_retention_days
+  eks_cluster_name                 = local.eks_cluster_name
+  lambda_function_name             = local.lambda_function_name
+  lambda_retention_days            = var.lambda_retention_days
+  eks_control_plane_retention_days = var.eks_control_plane_retention_days
+  eks_log_types                    = var.eks_log_types
+  enable_alb_log_group             = var.enable_alb_log_group
+  alb_log_bucket_name              = local.alb_log_bucket_name
+  kms_key_arn                      = var.kms_key_arn
+}
+
+module "observability_iam" {
+  count  = var.enable_observability_iam ? 1 : 0
+  source = "../../../modules/ops/observability-iam"
+
+  env                             = var.env
+  eks_oidc_provider_url           = local.eks_oidc_provider_url
+  eks_oidc_provider_arn           = local.eks_oidc_provider_arn
+  prometheus_namespace            = var.prometheus_k8s_namespace
+  prometheus_service_account_name = var.prometheus_service_account_name
+  grafana_namespace               = var.grafana_namespace
+  grafana_service_account_name    = var.grafana_service_account_name
+  fluentbit_namespace             = var.fluentbit_namespace
+  fluentbit_service_account_name  = var.fluentbit_service_account_name
+  enable_grafana_irsa             = var.enable_grafana_irsa
+  enable_prometheus_irsa          = var.enable_prometheus_irsa
+  enable_fluentbit_irsa           = var.enable_fluentbit_irsa
+  log_group_arns                  = module.log_groups.all_log_group_arns
+}

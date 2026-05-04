@@ -17,21 +17,7 @@ provider "aws" {
       Project     = "safespot"
       Environment = var.env
       ManagedBy   = "terraform"
-      Part        = "ops"
-    }
-  }
-}
-
-provider "aws" {
-  alias  = "us_east_1"
-  region = "us-east-1"
-
-  default_tags {
-    tags = {
-      Project     = "safespot"
-      Environment = var.env
-      ManagedBy   = "terraform"
-      Part        = "ops"
+      Part        = "cicd"
     }
   }
 }
