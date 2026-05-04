@@ -6,10 +6,7 @@ variable "sns_topic_arn" {
   type = string
 }
 
-variable "alb_arn_suffix" {
-  type    = string
-  default = ""
-}
+# [삭제] alb_arn_suffix 제거
 
 variable "alb_5xx_threshold" {
   type    = number

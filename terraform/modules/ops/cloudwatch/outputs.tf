@@ -2,11 +2,7 @@ output "alarm_arns" {
   description = "생성된 CloudWatch Alarm ARN 전체 map"
 
   value = merge(
-    local.has_alb ? {
-      alb_5xx     = aws_cloudwatch_metric_alarm.alb_5xx[0].arn
-      alb_latency = aws_cloudwatch_metric_alarm.alb_latency[0].arn
-      alb_4xx     = aws_cloudwatch_metric_alarm.alb_4xx[0].arn
-    } : {},
+    # [삭제] has_alb 블록 제거
 
     local.has_rds ? {
       rds_cpu               = aws_cloudwatch_metric_alarm.rds_cpu[0].arn
@@ -48,9 +44,8 @@ output "alarm_arns" {
     } : {},
 
     local.has_eks ? {
-      eks_pod_restarts = aws_cloudwatch_metric_alarm.eks_pod_restarts[0].arn
-      eks_node_cpu     = aws_cloudwatch_metric_alarm.eks_node_cpu[0].arn
-      eks_node_memory  = aws_cloudwatch_metric_alarm.eks_node_memory[0].arn
+      eks_node_cpu    = aws_cloudwatch_metric_alarm.eks_node_cpu[0].arn
+      eks_node_memory = aws_cloudwatch_metric_alarm.eks_node_memory[0].arn
     } : {},
 
     local.has_cloudfront ? {
