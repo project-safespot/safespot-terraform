@@ -1,3 +1,11 @@
+# [변경] api-service remote state key 수정
+#        dev/api-service/terraform.tfstate
+#        → environments/dev/api-service/eks-core/terraform.tfstate
+#
+# [변경] alb_arn_suffix / alb_log_bucket_name 관련 locals 및 network remote state 참조 삭제
+#
+# [변경] try() 전부 제거
+
 data "terraform_remote_state" "network" {
   backend = "s3"
 
@@ -13,7 +21,7 @@ data "terraform_remote_state" "api_service" {
 
   config = {
     bucket = local.remote_state_bucket
-    key    = "${var.env}/api-service/terraform.tfstate"
+    key    = "environments/${var.env}/api-service/eks-core/terraform.tfstate"
     region = local.remote_state_region
   }
 }
@@ -49,32 +57,21 @@ data "terraform_remote_state" "front_edge" {
 }
 
 locals {
-  alb_arn_suffix          = try(data.terraform_remote_state.network.outputs.alb_arn_suffix, "")
-  target_group_arn_suffix = try(data.terraform_remote_state.network.outputs.target_group_arn_suffix, "")
-  nat_gateway_id          = try(data.terraform_remote_state.network.outputs.nat_gateway_id, "")
+  # [삭제] alb_arn_suffix, alb_log_bucket_name 제거
 
-  alb_log_bucket_name = (
-    var.alb_log_bucket_name != ""
-    ? var.alb_log_bucket_name
-    : try(data.terraform_remote_state.network.outputs.alb_log_bucket_name, "")
-  )
-
-  rds_cluster_identifier = try(data.terraform_remote_state.data_layer.outputs.rds_cluster_identifier, "")
-  redis_cluster_id       = try(data.terraform_remote_state.data_layer.outputs.redis_cluster_id, "")
+  rds_cluster_identifier = data.terraform_remote_state.data_layer.outputs.rds_cluster_identifier
+  redis_cluster_id       = data.terraform_remote_state.data_layer.outputs.redis_cluster_id
 
   sqs_queues = {
-    cache_refresh = try(data.terraform_remote_state.async_worker.outputs.sqs_queue_name_cache_refresh, "")
-    readmodel     = try(data.terraform_remote_state.async_worker.outputs.sqs_queue_name_readmodel, "")
-    env_cache     = try(data.terraform_remote_state.async_worker.outputs.sqs_queue_name_env_cache, "")
-    dlq           = try(data.terraform_remote_state.async_worker.outputs.sqs_dlq_name, "")
+    cache_refresh = data.terraform_remote_state.async_worker.outputs.sqs_queue_name_cache_refresh
+    readmodel     = data.terraform_remote_state.async_worker.outputs.sqs_queue_name_readmodel
+    env_cache     = data.terraform_remote_state.async_worker.outputs.sqs_queue_name_env_cache
+    dlq           = data.terraform_remote_state.async_worker.outputs.sqs_dlq_name
   }
 
-  lambda_function_name = try(data.terraform_remote_state.async_worker.outputs.lambda_function_name, "")
+  lambda_function_name = data.terraform_remote_state.async_worker.outputs.lambda_function_name
 
-  lambda_reserved_concurrent_executions = try(
-    data.terraform_remote_state.async_worker.outputs.lambda_reserved_concurrent_executions,
-    0
-  )
+  lambda_reserved_concurrent_executions = data.terraform_remote_state.async_worker.outputs.lambda_reserved_concurrent_executions
 
   lambda_concurrent_executions_threshold = (
     local.lambda_reserved_concurrent_executions > 0
@@ -82,20 +79,24 @@ locals {
     : 80
   )
 
-  eks_cluster_name      = try(data.terraform_remote_state.api_service.outputs.eks_cluster_name, "")
-  eks_oidc_provider_url = try(data.terraform_remote_state.api_service.outputs.eks_oidc_provider_url, "")
-  eks_oidc_provider_arn = try(data.terraform_remote_state.api_service.outputs.eks_oidc_provider_arn, "")
+  # [변경] output 이름 수정
+  #   eks_cluster_name      → cluster_name
+  #   eks_oidc_provider_url → oidc_provider
+  #   eks_oidc_provider_arn → oidc_provider_arn
+  eks_cluster_name      = data.terraform_remote_state.api_service.outputs.cluster_name
+  eks_oidc_provider_url = data.terraform_remote_state.api_service.outputs.oidc_provider
+  eks_oidc_provider_arn = data.terraform_remote_state.api_service.outputs.oidc_provider_arn
 
   cloudfront_distribution_id = (
     var.cloudfront_distribution_id != ""
     ? var.cloudfront_distribution_id
-    : try(data.terraform_remote_state.front_edge.outputs.cloudfront_distribution_id, "")
+    : data.terraform_remote_state.front_edge.outputs.cloudfront_distribution_id
   )
 
   waf_acl_name = (
     var.waf_acl_name != ""
     ? var.waf_acl_name
-    : try(data.terraform_remote_state.front_edge.outputs.waf_acl_name, "")
+    : data.terraform_remote_state.front_edge.outputs.waf_acl_name
   )
 }
 
@@ -134,24 +135,23 @@ module "cloudwatch" {
   env           = var.env
   sns_topic_arn = module.alerting.sns_topic_arn
 
-  alb_arn_suffix       = local.alb_arn_suffix
-  alb_5xx_threshold    = var.alb_5xx_threshold
-  alb_4xx_threshold    = var.alb_4xx_threshold
+  # [삭제] alb_arn_suffix 제거
+  alb_5xx_threshold     = var.alb_5xx_threshold
+  alb_4xx_threshold     = var.alb_4xx_threshold
   alb_latency_threshold = var.alb_latency_threshold_seconds
 
-  rds_cluster_identifier              = local.rds_cluster_identifier
-  rds_cpu_threshold                   = var.rds_cpu_threshold
-  rds_connections_threshold           = var.rds_connections_threshold
-  rds_free_storage_threshold_bytes    = var.rds_free_storage_threshold_bytes
+  rds_cluster_identifier           = local.rds_cluster_identifier
+  rds_cpu_threshold                = var.rds_cpu_threshold
+  rds_connections_threshold        = var.rds_connections_threshold
+  rds_free_storage_threshold_bytes = var.rds_free_storage_threshold_bytes
+  rds_replica_lag_threshold_ms     = var.rds_replica_lag_threshold_ms
+  rds_volume_bytes_threshold       = var.rds_volume_bytes_threshold
 
-  redis_cluster_id                 = local.redis_cluster_id
-  redis_cpu_threshold              = var.redis_cpu_threshold
-  redis_evictions_threshold        = var.redis_evictions_threshold
-  redis_curr_connections_threshold = var.redis_curr_connections_threshold
-  redis_memory_threshold           = var.redis_memory_threshold
-  rds_replica_lag_threshold_ms  = var.rds_replica_lag_threshold_ms
-  rds_volume_bytes_threshold    = var.rds_volume_bytes_threshold
-
+  redis_cluster_id                      = local.redis_cluster_id
+  redis_cpu_threshold                   = var.redis_cpu_threshold
+  redis_evictions_threshold             = var.redis_evictions_threshold
+  redis_curr_connections_threshold      = var.redis_curr_connections_threshold
+  redis_memory_threshold                = var.redis_memory_threshold
   redis_freeable_memory_threshold_bytes = var.redis_freeable_memory_threshold_bytes
   redis_bytes_used_threshold_bytes      = var.redis_bytes_used_threshold_bytes
 
@@ -167,10 +167,10 @@ module "cloudwatch" {
   lambda_duration_threshold_ms           = var.lambda_duration_p99_threshold_ms
   lambda_concurrent_executions_threshold = local.lambda_concurrent_executions_threshold
 
-  eks_cluster_name            = local.eks_cluster_name
-  eks_pod_restart_threshold   = var.eks_pod_restart_threshold
-  eks_node_cpu_threshold      = var.eks_node_cpu_threshold
-  eks_node_memory_threshold   = var.eks_node_memory_threshold
+  eks_cluster_name          = local.eks_cluster_name
+  eks_pod_restart_threshold = var.eks_pod_restart_threshold
+  eks_node_cpu_threshold    = var.eks_node_cpu_threshold
+  eks_node_memory_threshold = var.eks_node_memory_threshold
 
   cloudfront_distribution_id = local.cloudfront_distribution_id
   waf_acl_name               = local.waf_acl_name
@@ -188,7 +188,6 @@ module "log_groups" {
   eks_control_plane_retention_days = var.eks_control_plane_retention_days
   eks_log_types                    = var.eks_log_types
   enable_alb_log_group             = var.enable_alb_log_group
-  alb_log_bucket_name              = local.alb_log_bucket_name
   kms_key_arn                      = var.kms_key_arn
 }
 
