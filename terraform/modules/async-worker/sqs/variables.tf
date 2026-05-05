@@ -8,12 +8,6 @@ variable "environment" {
   type        = string
 }
 
-variable "queue_name" {
-  description = "Logical queue name suffix"
-  type        = string
-  default     = "event"
-}
-
 # visibility_timeout은 consumer 처리 시간보다 커야 한다
 # 실제 Lambda timeout 기준으로 조정 필요
 variable "visibility_timeout_seconds" {

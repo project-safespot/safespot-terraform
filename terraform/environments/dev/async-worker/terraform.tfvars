@@ -1,7 +1,6 @@
 aws_region  = "ap-northeast-2"
 project     = "safespot"
 environment = "dev"
-queue_name  = "event"
 
 # visibility_timeout은 consumer 처리 시간보다 커야 한다
 # 실제 Lambda timeout 기준으로 조정 필요

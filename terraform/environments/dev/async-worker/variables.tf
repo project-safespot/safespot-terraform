@@ -13,12 +13,6 @@ variable "environment" {
   type        = string
 }
 
-variable "queue_name" {
-  description = "Logical queue name suffix"
-  type        = string
-  default     = "event"
-}
-
 variable "visibility_timeout_seconds" {
   description = "SQS visibility timeout in seconds"
   type        = number
@@ -41,4 +35,16 @@ variable "max_receive_count" {
   description = "Number of receives before moving to DLQ"
   type        = number
   default     = 5
+}
+
+variable "lambda_function_name" {
+  description = "Async-worker Lambda function name. Placeholder until Lambda Terraform resource is managed here."
+  type        = string
+  default     = null
+}
+
+variable "lambda_reserved_concurrent_executions" {
+  description = "Reserved concurrency for async-worker Lambda. Placeholder until Lambda Terraform resource is managed here."
+  type        = number
+  default     = null
 }
