@@ -9,5 +9,5 @@ argocd_namespace     = "argocd"
 argocd_chart_version = "7.6.12"
 
 repo_url        = "https://github.com/project-safespot/safespot-terraform.git"
-target_revision = "feat/terraform-addon"
+target_revision = "infra/api-service"
 addons_path     = "argocd"

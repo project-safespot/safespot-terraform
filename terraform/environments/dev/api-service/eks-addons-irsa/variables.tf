@@ -36,6 +36,12 @@ variable "external_dns_service_account_name" {
   default     = "external-dns"
 }
 
+variable "external_dns_zone_name" {
+  description = "Route53 public hosted zone name managed by ExternalDNS"
+  type        = string
+  default     = "safespot.site"
+}
+
 variable "external_secrets_namespace" {
   description = "Kubernetes namespace for External Secrets Operator"
   type        = string

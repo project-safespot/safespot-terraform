@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/terraform/addons/cert-manager/values-dev.yaml
     - repoURL: https://github.com/project-safespot/safespot-terraform.git
-      targetRevision: HEAD
+      targetRevision: infra/api-service
       ref: values
   destination:
     server: https://kubernetes.default.svc

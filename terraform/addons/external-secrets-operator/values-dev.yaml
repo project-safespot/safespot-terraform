@@ -6,8 +6,7 @@ installCRDs: true
 serviceAccount:
   create: true
   name: external-secrets
-  annotations:
-    eks.amazonaws.com/role-arn: ""
+  annotations: {}
 
 resources:
   requests:

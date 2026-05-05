@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/project-safespot/safespot-terraform.git
-    targetRevision: feat/terraform-addon
+    targetRevision: infra/api-service
     path: argocd
     directory:
       recurse: false

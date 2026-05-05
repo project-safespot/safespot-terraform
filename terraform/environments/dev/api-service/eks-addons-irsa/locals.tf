@@ -2,7 +2,7 @@ locals {
   domain    = "api-service"
   component = "eks-addons-irsa"
 
-  cluster_name      = data.terraform_remote_state.eks_core.outputs.cluster_name
+  # cluster_name      = data.terraform_remote_state.eks_core.outputs.cluster_name
   oidc_provider_arn = data.terraform_remote_state.eks_core.outputs.oidc_provider_arn
   oidc_provider     = data.terraform_remote_state.eks_core.outputs.oidc_provider
 

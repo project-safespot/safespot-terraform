@@ -25,12 +25,32 @@ tf_output() {
   terraform -chdir="${REPO_ROOT}/$1" output -raw "$2"
 }
 
+require_role_arn() {
+  local label="$1"
+  local value="$2"
+
+  if [[ -z "${value}" ]]; then
+    echo "ERROR: ${label} Terraform output is empty. Run terraform apply for the source root before updating values." >&2
+    exit 1
+  fi
+
+  if [[ ! "${value}" =~ ^arn:aws(-[a-z]+)?:iam::[0-9]{12}:role/.+ ]]; then
+    echo "ERROR: ${label} is not a valid IAM role ARN: ${value}" >&2
+    exit 1
+  fi
+}
+
 echo "==> Reading Terraform outputs..."
 
 ALB_ROLE_ARN=$(tf_output "terraform/environments/dev/api-service/eks-irsa" "alb_controller_irsa_role_arn")
 KARPENTER_ROLE_ARN=$(tf_output "terraform/environments/dev/api-service/eks-karpenter" "karpenter_controller_role_arn")
 EXTERNAL_DNS_ROLE_ARN=$(tf_output "terraform/environments/dev/api-service/eks-addons-irsa" "external_dns_irsa_role_arn")
 EXTERNAL_SECRETS_ROLE_ARN=$(tf_output "terraform/environments/dev/api-service/eks-addons-irsa" "external_secrets_irsa_role_arn")
+
+require_role_arn "ALB Controller role ARN" "${ALB_ROLE_ARN}"
+require_role_arn "Karpenter role ARN" "${KARPENTER_ROLE_ARN}"
+require_role_arn "ExternalDNS role ARN" "${EXTERNAL_DNS_ROLE_ARN}"
+require_role_arn "External Secrets role ARN" "${EXTERNAL_SECRETS_ROLE_ARN}"
 
 echo ""
 echo "  ALB Controller      : ${ALB_ROLE_ARN}"
@@ -51,7 +71,11 @@ set_role_arn() {
   if command -v yq &>/dev/null; then
     yq e ".serviceAccount.annotations[\"eks.amazonaws.com/role-arn\"] = \"${arn}\"" -i "${file}"
   else
-    sed -i "s|eks.amazonaws.com/role-arn:.*|eks.amazonaws.com/role-arn: \"${arn}\"|" "${file}"
+    if grep -q "eks.amazonaws.com/role-arn:" "${file}"; then
+      sed -i "s|eks.amazonaws.com/role-arn:.*|eks.amazonaws.com/role-arn: \"${arn}\"|" "${file}"
+    else
+      sed -i "/^[[:space:]]*annotations:[[:space:]]*{}[[:space:]]*$/c\\  annotations:\\n    eks.amazonaws.com/role-arn: \"${arn}\"" "${file}"
+    fi
   fi
   echo "  updated: $1"
 }

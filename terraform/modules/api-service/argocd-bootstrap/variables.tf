@@ -24,7 +24,7 @@ variable "repo_url" {
 variable "target_revision" {
   description = "Git branch or commit for ArgoCD root Application."
   type        = string
-  default     = "feat/terraform-addon"
+  default     = "infra/api-service"
 }
 
 variable "addons_path" {

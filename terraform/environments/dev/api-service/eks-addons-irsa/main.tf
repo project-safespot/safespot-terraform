@@ -1,10 +1,43 @@
 # ============================================================
 # ExternalDNS IAM Policy
 # ============================================================
+data "aws_route53_zone" "external_dns" {
+  name         = var.external_dns_zone_name
+  private_zone = false
+}
+
+data "aws_iam_policy_document" "external_dns" {
+  statement {
+    sid    = "AllowExternalDNSRecordChanges"
+    effect = "Allow"
+
+    actions = [
+      "route53:ChangeResourceRecordSets",
+    ]
+
+    resources = [
+      data.aws_route53_zone.external_dns.arn,
+    ]
+  }
+
+  statement {
+    sid    = "AllowExternalDNSRead"
+    effect = "Allow"
+
+    actions = [
+      "route53:ListHostedZones",
+      "route53:ListResourceRecordSets",
+      "route53:ListTagsForResource",
+    ]
+
+    resources = ["*"]
+  }
+}
+
 resource "aws_iam_policy" "external_dns" {
   name        = local.external_dns_policy_name
   description = "IAM policy for ExternalDNS to manage Route53 records"
-  policy      = file("${path.module}/policies/external-dns-policy.json")
+  policy      = data.aws_iam_policy_document.external_dns.json
 
   tags = merge(local.common_tags, {
     Name      = local.external_dns_policy_name
@@ -33,10 +66,43 @@ module "external_dns_irsa" {
 # ============================================================
 # External Secrets Operator IAM Policy
 # ============================================================
+data "aws_caller_identity" "current" {}
+
+data "aws_iam_policy_document" "external_secrets" {
+  statement {
+    sid    = "SecretsManagerRead"
+    effect = "Allow"
+
+    actions = [
+      "secretsmanager:GetSecretValue",
+      "secretsmanager:DescribeSecret",
+    ]
+
+    resources = [
+      "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:${var.project}/${var.env}/*",
+    ]
+  }
+
+  statement {
+    sid    = "SSMParameterStoreRead"
+    effect = "Allow"
+
+    actions = [
+      "ssm:GetParameter",
+      "ssm:GetParameters",
+      "ssm:GetParametersByPath",
+    ]
+
+    resources = [
+      "arn:aws:ssm:${var.aws_region}:${data.aws_caller_identity.current.account_id}:parameter/${var.project}/${var.env}/*",
+    ]
+  }
+}
+
 resource "aws_iam_policy" "external_secrets" {
   name        = local.external_secrets_policy_name
   description = "IAM policy for External Secrets Operator to access Secrets Manager and SSM Parameter Store"
-  policy      = file("${path.module}/policies/external-secrets-policy.json")
+  policy      = data.aws_iam_policy_document.external_secrets.json
 
   tags = merge(local.common_tags, {
     Name      = local.external_secrets_policy_name
