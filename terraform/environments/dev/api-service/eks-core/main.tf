@@ -11,12 +11,14 @@ module "eks_core" {
   cluster_security_group_id = local.eks_cluster_sg_id
   node_security_group_id    = local.eks_node_sg_id
 
-  cluster_endpoint_public_access = var.cluster_endpoint_public_access
+  cluster_endpoint_public_access  = var.cluster_endpoint_public_access
+  cluster_endpoint_private_access = var.cluster_endpoint_private_access
 
-  node_instance_types = var.node_instance_types
-  node_min_size       = var.node_min_size
-  node_max_size       = var.node_max_size
-  node_desired_size   = var.node_desired_size
+  eks_managed_node_group_name = var.eks_managed_node_group_name
+  node_instance_types         = var.node_instance_types
+  node_min_size               = var.node_min_size
+  node_max_size               = var.node_max_size
+  node_desired_size           = var.node_desired_size
 
   tags = local.common_tags
 }
