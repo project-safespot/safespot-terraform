@@ -57,12 +57,12 @@ ArgoCD reads Helm values from this repository (`safespot-terraform`) via multi-s
 | `karpenter` | public.ecr.aws/karpenter v1.2.0 | `kube-system` | 1 |
 | `external-secrets-operator` | charts.external-secrets.io v0.11.0 | `external-secrets` | 1 |
 | `metrics-server` | kubernetes-sigs.github.io/metrics-server v3.12.2 | `kube-system` | 1 |
+| `karpenter-configs` | local `terraform/addons/karpenter/chart` (wrapper) | `kube-system` | 2 |
 | `external-dns` | kubernetes-sigs.github.io/external-dns v1.15.0 | `external-dns` | 2 |
 
-Post-install manual steps (applied once after charts are running):
-- `kubectl apply -f terraform/addons/karpenter/ec2nodeclass-default.yaml`
-- `kubectl apply -f terraform/addons/karpenter/nodepool-default.yaml`
-- `kubectl apply -f terraform/addons/karpenter/nodepool-api-public-read.yaml`
+`karpenter-configs` installs EC2NodeClass and NodePool via a local wrapper Helm chart (`terraform/addons/karpenter/chart/`). All configuration is managed through `chart/values-dev.yaml`.
+
+Post-install manual step (one-time, after ESO is running):
 - `kubectl apply -f terraform/addons/external-secrets-operator/cluster-secret-store-dev.yaml`
 
 ---

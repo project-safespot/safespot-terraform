@@ -1,0 +1,68 @@
+# Karpenter EC2NodeClass and NodePool defaults.
+# Override in values-dev.yaml (or values-<env>.yaml).
+
+nodeClass:
+  name: default
+  amiAlias: al2023@latest
+
+  # IAM role name for Karpenter-provisioned nodes (NOT ARN, just name).
+  # Source: terraform -chdir=terraform/environments/dev/api-service/eks-karpenter output -raw karpenter_node_role_name
+  nodeRoleName: ""
+
+  # SQS queue name for Spot interruption handling.
+  # Controller setting — must also match settings.interruptionQueue in
+  # terraform/addons/karpenter/values-dev.yaml.
+  # Source: terraform -chdir=terraform/environments/dev/api-service/eks-karpenter output -raw karpenter_queue_name
+  interruptionQueue: ""
+
+  discovery:
+    # Tag key/value used to auto-select subnets and security groups.
+    # Matches the tag set by terraform/modules/network/sg and vpc:
+    #   "karpenter.sh/discovery" = "<project>-<environment>"
+    tagKey: karpenter.sh/discovery
+    tagValue: ""
+
+  # Full selector terms. When non-empty these override the discovery tag selectors.
+  subnetSelectorTerms: []
+  securityGroupSelectorTerms: []
+
+  tags:
+    ManagedBy: karpenter
+
+nodePools:
+  default:
+    enabled: true
+    # Node label applied by the NodePool template (used by app nodeSelector)
+    nodeLabel: workload
+    requirements:
+      arch: [amd64]
+      os: [linux]
+      capacityType: [spot, on-demand]
+      instanceCategory: [c, m, r]
+      instanceGeneration: "2"
+    limits:
+      cpu: "100"
+      memory: 400Gi
+    disruption:
+      consolidationPolicy: WhenEmptyOrUnderutilized
+      consolidateAfter: 1m
+
+  apiPublicRead:
+    enabled: true
+    nodeLabel: api-public-read
+    taint:
+      key: workload
+      value: api-public-read
+      effect: NoSchedule
+    requirements:
+      arch: [amd64]
+      os: [linux]
+      capacityType: [spot]
+      instanceCategory: [c, m]
+      instanceGeneration: "2"
+    limits:
+      cpu: "200"
+      memory: 400Gi
+    disruption:
+      consolidationPolicy: WhenEmpty
+      consolidateAfter: 5m

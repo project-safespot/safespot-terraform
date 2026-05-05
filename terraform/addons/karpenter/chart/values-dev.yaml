@@ -1,0 +1,26 @@
+nodeClass:
+  # terraform/environments/dev/api-service/eks-karpenter output karpenter_node_role_name
+  nodeRoleName: safespot-dev-karpenter-node
+
+  # terraform/environments/dev/api-service/eks-karpenter output karpenter_queue_name
+  # Keep in sync with settings.interruptionQueue in ../values-dev.yaml
+  interruptionQueue: safespot-dev-api-service-sqs-karpenter
+
+  discovery:
+    tagKey: karpenter.sh/discovery
+    # "${project}-${environment}" from terraform/modules/network/sg + vpc
+    tagValue: safespot-dev
+
+  # Explicitly set selectors using the karpenter.sh/discovery tag
+  subnetSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: safespot-dev
+
+  securityGroupSelectorTerms:
+    - tags:
+        karpenter.sh/discovery: safespot-dev
+
+  tags:
+    Project: safespot
+    Environment: dev
+    ManagedBy: karpenter

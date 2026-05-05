@@ -11,7 +11,7 @@ serviceAccount:
 settings:
   clusterName: safespot-dev-eks
   # clusterEndpoint is auto-discovered by Karpenter v1.x from the EKS API
-  interruptionQueue: safespot-dev-karpenter
+  interruptionQueue: safespot-dev-api-service-sqs-karpenter
 
 controller:
   resources:
