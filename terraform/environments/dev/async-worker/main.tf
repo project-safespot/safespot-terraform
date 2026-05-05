@@ -37,7 +37,7 @@ module "lambda" {
   environment = var.environment
 
   # path.root = terraform/environments/dev/async-worker 기준 절대경로로 변환
-  lambda_filename = "${path.root}/${var.lambda_filename}"
+  lambda_filename = var.lambda_filename
   lambda_handler  = var.lambda_handler
 
   cache_refresh_queue_arn             = module.sqs.cache_refresh_queue_arn
