@@ -44,6 +44,17 @@ variable "cluster_endpoint_public_access" {
   default     = true
 }
 
+variable "cluster_endpoint_private_access" {
+  description = "Whether to expose EKS API endpoint privately."
+  type        = bool
+  default     = true
+}
+
+variable "eks_managed_node_group_name" {
+  description = "Name for the default EKS managed node group."
+  type        = string
+}
+
 variable "node_instance_types" {
   description = "Instance types for the default EKS managed node group."
   type        = list(string)
@@ -53,7 +64,7 @@ variable "node_instance_types" {
 variable "node_min_size" {
   description = "Minimum node count."
   type        = number
-  default     = 1
+  default     = 2
 }
 
 variable "node_max_size" {
@@ -65,5 +76,5 @@ variable "node_max_size" {
 variable "node_desired_size" {
   description = "Desired node count."
   type        = number
-  default     = 1
+  default     = 2
 }

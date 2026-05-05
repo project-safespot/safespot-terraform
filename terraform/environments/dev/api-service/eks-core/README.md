@@ -348,15 +348,17 @@ alb.ingress.kubernetes.io/security-groups: <network.outputs.alb_sg_id>
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region. | `string` | `"ap-northeast-2"` | no |
+| <a name="input_cluster_endpoint_private_access"></a> [cluster\_endpoint\_private\_access](#input\_cluster\_endpoint\_private\_access) | Whether to expose EKS API endpoint privately. | `bool` | `true` | no |
 | <a name="input_cluster_endpoint_public_access"></a> [cluster\_endpoint\_public\_access](#input\_cluster\_endpoint\_public\_access) | Whether to expose EKS API endpoint publicly. | `bool` | `true` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | EKS cluster name. | `string` | n/a | yes |
 | <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | Kubernetes version for EKS. | `string` | `"1.34"` | no |
+| <a name="input_eks_managed_node_group_name"></a> [eks\_managed\_node\_group\_name](#input\_eks\_managed\_node\_group\_name) | Name for the default EKS managed node group. | `string` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | Environment name. | `string` | n/a | yes |
 | <a name="input_network_state_key"></a> [network\_state\_key](#input\_network\_state\_key) | S3 object key for network Terraform state. | `string` | `"environments/dev/network/terraform.tfstate"` | no |
-| <a name="input_node_desired_size"></a> [node\_desired\_size](#input\_node\_desired\_size) | Desired node count. | `number` | `1` | no |
+| <a name="input_node_desired_size"></a> [node\_desired\_size](#input\_node\_desired\_size) | Desired node count. | `number` | `2` | no |
 | <a name="input_node_instance_types"></a> [node\_instance\_types](#input\_node\_instance\_types) | Instance types for the default EKS managed node group. | `list(string)` | <pre>[<br/>  "t3.medium"<br/>]</pre> | no |
 | <a name="input_node_max_size"></a> [node\_max\_size](#input\_node\_max\_size) | Maximum node count. | `number` | `3` | no |
-| <a name="input_node_min_size"></a> [node\_min\_size](#input\_node\_min\_size) | Minimum node count. | `number` | `1` | no |
+| <a name="input_node_min_size"></a> [node\_min\_size](#input\_node\_min\_size) | Minimum node count. | `number` | `2` | no |
 | <a name="input_project"></a> [project](#input\_project) | Project name. | `string` | `"safespot"` | no |
 | <a name="input_remote_state_bucket"></a> [remote\_state\_bucket](#input\_remote\_state\_bucket) | S3 bucket name for Terraform remote state. | `string` | `"safespot-terraform-state"` | no |
 

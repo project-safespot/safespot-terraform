@@ -24,6 +24,7 @@ module "eks" {
   node_security_group_id     = var.node_security_group_id
 
   cluster_endpoint_public_access = var.cluster_endpoint_public_access
+  cluster_endpoint_private_access = var.cluster_endpoint_private_access
 
   enable_cluster_creator_admin_permissions = true
 
@@ -54,7 +55,7 @@ module "eks" {
 
   eks_managed_node_groups = {
     default = {
-      name = "default"
+      name = var.eks_managed_node_group_name
 
       ami_type       = "AL2023_x86_64_STANDARD"
       instance_types = var.node_instance_types

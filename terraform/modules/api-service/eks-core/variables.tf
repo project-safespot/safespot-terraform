@@ -31,10 +31,21 @@ variable "cluster_endpoint_public_access" {
   default     = true
 }
 
+variable "cluster_endpoint_private_access" {
+  description = "Whether to expose EKS API endpoint privately."
+  type        = bool
+  default     = true
+}
+
 variable "node_instance_types" {
   description = "Instance types for the default EKS managed node group."
   type        = list(string)
   default     = ["t3.medium"]
+}
+
+variable "eks_managed_node_group_name" {
+  description = "EKS managed node group name."
+  type        = string
 }
 
 variable "node_min_size" {
