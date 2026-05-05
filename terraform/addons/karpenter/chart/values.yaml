@@ -18,9 +18,9 @@ nodeClass:
   discovery:
     # Tag key/value used to auto-select subnets and security groups.
     # Matches the tag set by terraform/modules/network/sg and vpc:
-    #   "karpenter.sh/discovery" = "<project>-<environment>"
-    tagKey: karpenter.sh/discovery
-    tagValue: ""
+    #   "kubernetes.io/cluster/safespot-dev" = "owned"
+    tagKey: kubernetes.io/cluster/safespot-dev
+    tagValue: "owned"
 
   # Full selector terms. When non-empty these override the discovery tag selectors.
   subnetSelectorTerms: []
