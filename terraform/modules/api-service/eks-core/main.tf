@@ -4,6 +4,32 @@ locals {
     ? var.control_plane_subnet_ids
     : var.private_subnet_ids
   )
+
+  before_compute_cluster_addons = {
+    vpc-cni = {
+      most_recent    = true
+      before_compute = true
+    }
+  }
+
+  after_compute_cluster_addons = {
+    coredns = {
+      most_recent = true
+    }
+
+    kube-proxy = {
+      most_recent = true
+    }
+
+    eks-pod-identity-agent = {
+      most_recent = true
+    }
+  }
+
+  cluster_addons = merge(
+    local.before_compute_cluster_addons,
+    var.create_managed_node_group ? local.after_compute_cluster_addons : {}
+  )
 }
 
 module "eks" {
@@ -29,24 +55,7 @@ module "eks" {
 
   bootstrap_self_managed_addons = false
 
-  cluster_addons = {
-    coredns = {
-      most_recent = true
-    }
-
-    kube-proxy = {
-      most_recent = true
-    }
-
-    vpc-cni = {
-      most_recent    = true
-      before_compute = true
-    }
-
-    eks-pod-identity-agent = {
-      most_recent = true
-    }
-  }
+  cluster_addons = local.cluster_addons
 
   eks_managed_node_group_defaults = {
     ami_type       = "AL2023_x86_64_STANDARD"

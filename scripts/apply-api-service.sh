@@ -228,7 +228,7 @@ wait_for_nodes_ready() {
   while ((SECONDS < deadline)); do
     if kubectl get nodes >/tmp/codex-kubectl-nodes.txt 2>/dev/null; then
       cat /tmp/codex-kubectl-nodes.txt
-      if awk 'NR > 1 { if ($2 != "Ready") bad=1 } END { exit bad ? 1 : 0 }' /tmp/codex-kubectl-nodes.txt; then
+      if awk 'NR > 1 { count++; if ($2 != "Ready") bad=1 } END { exit (count > 0 && !bad) ? 0 : 1 }' /tmp/codex-kubectl-nodes.txt; then
         return
       fi
     fi
