@@ -6,7 +6,7 @@
   },
 
   "editor.codeActionsOnSave": {
-    "source.fixAll": "explicit"
+    "source.fixAll": true
   },
 
   "terraform.languageServer": {
