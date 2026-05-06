@@ -13,6 +13,8 @@ module "eks_core" {
   cluster_endpoint_public_access  = var.cluster_endpoint_public_access
   cluster_endpoint_private_access = var.cluster_endpoint_private_access
 
+  create_managed_node_group = var.create_managed_node_group
+
   eks_managed_node_group_name = var.eks_managed_node_group_name
 
   node_iam_role_name = var.node_iam_role_name

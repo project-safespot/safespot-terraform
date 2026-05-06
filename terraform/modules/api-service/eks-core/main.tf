@@ -53,7 +53,7 @@ module "eks" {
     instance_types = var.node_instance_types
   }
 
-  eks_managed_node_groups = {
+  eks_managed_node_groups = var.create_managed_node_group ? {
     default = {
       name = var.eks_managed_node_group_name
 
@@ -77,7 +77,7 @@ module "eks" {
         WorkloadRole = "system"
       })
     }
-  }
+  } : {}
 
   tags = var.tags
 }

@@ -352,6 +352,7 @@ alb.ingress.kubernetes.io/security-groups: <network.outputs.alb_sg_id>
 | <a name="input_cluster_endpoint_public_access"></a> [cluster\_endpoint\_public\_access](#input\_cluster\_endpoint\_public\_access) | Whether to expose EKS API endpoint publicly. | `bool` | `true` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | EKS cluster name. | `string` | n/a | yes |
 | <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | Kubernetes version for EKS. | `string` | `"1.34"` | no |
+| <a name="input_create_managed_node_group"></a> [create\_managed\_node\_group](#input\_create\_managed\_node\_group) | Whether to create the baseline EKS managed node group. Set false for the first cluster-only bootstrap apply, then true after eks-sg-rules is applied. | `bool` | `true` | no |
 | <a name="input_eks_managed_node_group_name"></a> [eks\_managed\_node\_group\_name](#input\_eks\_managed\_node\_group\_name) | Name for the default EKS managed node group. | `string` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | Environment name. | `string` | n/a | yes |
 | <a name="input_network_state_key"></a> [network\_state\_key](#input\_network\_state\_key) | S3 object key for network Terraform state. | `string` | `"environments/dev/network/terraform.tfstate"` | no |

@@ -29,6 +29,7 @@ No resources.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | EKS cluster name. | `string` | n/a | yes |
 | <a name="input_cluster_version"></a> [cluster\_version](#input\_cluster\_version) | Kubernetes version for EKS. | `string` | `"1.34"` | no |
 | <a name="input_control_plane_subnet_ids"></a> [control\_plane\_subnet\_ids](#input\_control\_plane\_subnet\_ids) | Subnet IDs for EKS control plane ENIs. If empty, private\_subnet\_ids will be used. | `list(string)` | `[]` | no |
+| <a name="input_create_managed_node_group"></a> [create\_managed\_node\_group](#input\_create\_managed\_node\_group) | Whether to create the baseline EKS managed node group. Set false for the first cluster-only bootstrap apply, then true after eks-sg-rules is applied. | `bool` | `true` | no |
 | <a name="input_eks_managed_node_group_name"></a> [eks\_managed\_node\_group\_name](#input\_eks\_managed\_node\_group\_name) | EKS managed node group name. | `string` | n/a | yes |
 | <a name="input_node_desired_size"></a> [node\_desired\_size](#input\_node\_desired\_size) | Desired number of nodes in the default managed node group. | `number` | `2` | no |
 | <a name="input_node_iam_role_name"></a> [node\_iam\_role\_name](#input\_node\_iam\_role\_name) | IAM role name for EKS managed node group. | `string` | n/a | yes |

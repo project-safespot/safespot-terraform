@@ -83,3 +83,9 @@ variable "node_desired_size" {
   type        = number
   default     = 2
 }
+
+variable "create_managed_node_group" {
+  description = "Whether to create the baseline EKS managed node group. Set false for the first cluster-only bootstrap apply, then true after eks-sg-rules is applied."
+  type        = bool
+  default     = true
+}
