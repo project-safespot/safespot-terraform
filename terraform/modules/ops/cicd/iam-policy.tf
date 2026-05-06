@@ -26,7 +26,7 @@ resource "aws_iam_policy" "ecr_push" {
           "ecr:GetDownloadUrlForLayer"
         ]
         Resource = length(var.ecr_repository_arns) > 0 ? var.ecr_repository_arns : [
-          "arn:aws:ecr:${data.aws_region.current.name}:${local.account_id}:repository/${local.project}-${var.environment}-${local.domain}-ecr-*"
+          "arn:aws:ecr:${data.aws_region.current.name}:${local.account_id}:repository/${var.project}-${var.environment}-${local.domain}-ecr-*"
         ]
       }
     ]
@@ -34,12 +34,12 @@ resource "aws_iam_policy" "ecr_push" {
 
   tags = {
     Name        = "${local.name_prefix}-iam-policy-ecr-push"
-    Project     = local.project
+    Project     = var.project
     Environment = var.environment
     Domain      = local.domain
     ManagedBy   = "terraform"
     Service     = "github-actions"
-    CostCenter  = "${local.project}-${var.environment}"
+    CostCenter  = "${var.project}-${var.environment}"
   }
 }
 
@@ -70,12 +70,12 @@ resource "aws_iam_policy" "terraform_state" {
 
   tags = {
     Name        = "${local.name_prefix}-iam-policy-terraform-state"
-    Project     = local.project
+    Project     = var.project
     Environment = var.environment
     Domain      = local.domain
     ManagedBy   = "terraform"
     Service     = "terraform-state"
-    CostCenter  = "${local.project}-${var.environment}"
+    CostCenter  = "${var.project}-${var.environment}"
   }
 }
 
@@ -134,7 +134,7 @@ resource "aws_iam_policy" "terraform_infra" {
           "ecr:UntagResource",
           "ecr:ListTagsForResource"
         ]
-        Resource = "arn:aws:ecr:*:${local.account_id}:repository/${local.project}-${var.environment}-${local.domain}-ecr-*"
+        Resource = "arn:aws:ecr:*:${local.account_id}:repository/${var.project}-${var.environment}-${local.domain}-ecr-*"
       },
       {
         Sid    = "AllowIAM"
@@ -184,7 +184,7 @@ resource "aws_iam_policy" "terraform_infra" {
           "secretsmanager:TagResource",
           "secretsmanager:UntagResource"
         ]
-        Resource = "arn:aws:secretsmanager:*:${local.account_id}:secret:safespot/*"
+        Resource = "arn:aws:secretsmanager:*:${local.account_id}:secret:${var.project}/*"
       },
       {
         Sid      = "AllowSTSGetCallerIdentity"
@@ -197,12 +197,12 @@ resource "aws_iam_policy" "terraform_infra" {
 
   tags = {
     Name        = "${local.name_prefix}-iam-policy-terraform-infra"
-    Project     = local.project
+    Project     = var.project
     Environment = var.environment
     Domain      = local.domain
     ManagedBy   = "terraform"
     Service     = "terraform"
-    CostCenter  = "${local.project}-${var.environment}"
+    CostCenter  = "${var.project}-${var.environment}"
   }
 }
 

@@ -1,6 +1,6 @@
 variable "project" {
-  type    = string
-  default = "safespot"
+  description = "Project name."
+  type        = string
 }
 
 variable "environment" {
@@ -9,8 +9,8 @@ variable "environment" {
 }
 
 variable "domain" {
-  type    = string
-  default = "ops"
+  description = "Domain name."
+  type        = string
 }
 
 variable "services" {

@@ -1,7 +1,7 @@
 # modules/ops/observability-iam/locals.tf
 
 locals {
-  name_prefix = "safespot-${var.environment}"
+  name_prefix = "${var.project}-${var.environment}"
 
   # OIDC Provider URL에서 https:// 제거
   # IRSA condition StringEquals key에 사용

@@ -2,7 +2,7 @@ resource "aws_secretsmanager_secret" "slack_webhook" {
   count = var.enable_slack_secret ? 1 : 0
 
   name        = local.slack_secret_name
-  description = "SafeSpot ${var.environment} AlertManager Slack Webhook URL"
+  description = "${var.project} ${var.environment} AlertManager Slack Webhook URL"
 
   recovery_window_in_days = var.slack_webhook_recovery_window_days
 

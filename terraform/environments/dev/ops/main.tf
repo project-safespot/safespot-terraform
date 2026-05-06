@@ -10,9 +10,9 @@ data "terraform_remote_state" "network" {
   backend = "s3"
 
   config = {
-    bucket = local.remote_state_bucket
-    key    = "environments/${var.env}/network/terraform.tfstate"
-    region = local.remote_state_region
+    bucket = var.remote_state_bucket
+    key    = "environments/${var.environment}/network/terraform.tfstate"
+    region = var.remote_state_region
   }
 }
 
@@ -20,9 +20,9 @@ data "terraform_remote_state" "api_service" {
   backend = "s3"
 
   config = {
-    bucket = local.remote_state_bucket
-    key    = "environments/${var.env}/api-service/eks-core/terraform.tfstate"
-    region = local.remote_state_region
+    bucket = var.remote_state_bucket
+    key    = "environments/${var.environment}/api-service/eks-core/terraform.tfstate"
+    region = var.remote_state_region
   }
 }
 
@@ -30,9 +30,9 @@ data "terraform_remote_state" "data_layer" {
   backend = "s3"
 
   config = {
-    bucket = local.remote_state_bucket
-    key    = "environments/${var.env}/data/terraform.tfstate"
-    region = local.remote_state_region
+    bucket = var.remote_state_bucket
+    key    = "environments/${var.environment}/data/terraform.tfstate"
+    region = var.remote_state_region
   }
 }
 
@@ -40,9 +40,9 @@ data "terraform_remote_state" "async_worker" {
   backend = "s3"
 
   config = {
-    bucket = local.remote_state_bucket
-    key    = "environments/${var.env}/async-worker/terraform.tfstate"
-    region = local.remote_state_region
+    bucket = var.remote_state_bucket
+    key    = "environments/${var.environment}/async-worker/terraform.tfstate"
+    region = var.remote_state_region
   }
 }
 
@@ -50,9 +50,9 @@ data "terraform_remote_state" "front_edge" {
   backend = "s3"
 
   config = {
-    bucket = local.remote_state_bucket
-    key    = "environments/${var.env}/edge/terraform.tfstate"
-    region = local.remote_state_region
+    bucket = var.remote_state_bucket
+    key    = "environments/${var.environment}/edge/terraform.tfstate"
+    region = var.remote_state_region
   }
 }
 
@@ -103,10 +103,10 @@ locals {
 module "ecr" {
   source = "../../../modules/ops/ecr"
 
-  project              = local.project
-  env                  = var.env
+  project              = var.project
+  environment          = var.environment
   domain               = local.domain
-  services             = local.services
+  services             = var.services
   image_tag_mutability = var.image_tag_mutability
   scan_on_push         = var.scan_on_push
   max_image_count      = var.max_image_count
@@ -116,7 +116,8 @@ module "ecr" {
 module "alerting" {
   source = "../../../modules/ops/alerting"
 
-  env                                = var.env
+  project                            = var.project
+  environment                        = var.environment
   alert_email                        = var.alert_email
   additional_email_subscriptions     = var.additional_email_subscriptions
   slack_webhook_secret_name          = var.slack_webhook_secret_name
@@ -132,7 +133,8 @@ module "cloudwatch" {
     aws.us_east_1 = aws.us_east_1
   }
 
-  env           = var.env
+  project       = var.project
+  environment   = var.environment
   sns_topic_arn = module.alerting.sns_topic_arn
 
   # [삭제] alb_arn_suffix 제거
@@ -179,9 +181,10 @@ module "cloudwatch" {
 module "log_groups" {
   source = "../../../modules/ops/log-groups"
 
-  env                              = var.env
-  services                         = local.services
-  retention_days                   = local.log_retention_days
+  project                          = var.project
+  environment                      = var.environment
+  services                         = var.services
+  retention_days                   = var.log_retention_days
   eks_cluster_name                 = local.eks_cluster_name
   lambda_function_name             = local.lambda_function_name
   lambda_retention_days            = var.lambda_retention_days
@@ -195,7 +198,8 @@ module "observability_iam" {
   count  = var.enable_observability_iam ? 1 : 0
   source = "../../../modules/ops/observability-iam"
 
-  env                             = var.env
+  project                         = var.project
+  environment                     = var.environment
   eks_oidc_provider_url           = local.eks_oidc_provider_url
   eks_oidc_provider_arn           = local.eks_oidc_provider_arn
   prometheus_namespace            = var.prometheus_k8s_namespace

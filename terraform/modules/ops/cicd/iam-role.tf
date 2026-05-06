@@ -35,12 +35,12 @@ resource "aws_iam_role" "github_actions" {
 
   tags = {
     Name        = "${local.name_prefix}-iam-role-gha-${replace(each.key, "/", "-")}"
-    Project     = local.project
+    Project     = var.project
     Environment = var.environment
     Domain      = local.domain
     ManagedBy   = "terraform"
     Service     = "github-actions"
-    CostCenter  = "${local.project}-${var.environment}"
+    CostCenter  = "${var.project}-${var.environment}"
     Repository  = each.key
   }
 }

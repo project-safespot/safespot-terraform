@@ -1,3 +1,8 @@
+variable "project" {
+  description = "Project name."
+  type        = string
+}
+
 variable "environment" {
   description = "Environment name"
   type        = string
@@ -212,10 +217,4 @@ variable "sqs_visible_threshold" {
   description = "SQS 대기 메시지 수 임계값"
   type        = number
   default     = 100
-}
-
-variable "sqs_oldest_age_threshold" {
-  description = "SQS 가장 오래된 메시지 대기 시간 임계값 (초)"
-  type        = number
-  default     = 300
 }

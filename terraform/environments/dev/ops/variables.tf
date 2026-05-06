@@ -1,16 +1,38 @@
 variable "aws_region" {
-  type    = string
-  default = "ap-northeast-2"
+  type = string
 }
 
 variable "environment" {
-  type    = string
-  default = "dev"
+  type = string
 
   validation {
     condition     = contains(["dev", "stg", "prod"], var.environment)
     error_message = "env는 dev, stg, prod 중 하나여야 합니다."
   }
+}
+
+variable "project" {
+  type = string
+}
+
+variable "services" {
+  description = "ECR 및 Log Group을 생성할 서비스 이름 목록"
+  type        = list(string)
+}
+
+variable "log_retention_days" {
+  description = "애플리케이션 CloudWatch Log Group 기본 보존 기간 (일)"
+  type        = number
+}
+
+variable "remote_state_bucket" {
+  description = "Terraform 원격 상태 S3 버킷 이름"
+  type        = string
+}
+
+variable "remote_state_region" {
+  description = "Terraform 원격 상태 S3 버킷 리전"
+  type        = string
 }
 
 variable "alert_email" {

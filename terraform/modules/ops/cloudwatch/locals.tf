@@ -1,7 +1,6 @@
 locals {
-  project     = "safespot"
   domain      = "ops"
-  name_prefix = "${local.project}-${var.environment}-${local.domain}"
+  name_prefix = "${var.project}-${var.environment}-${local.domain}"
 
   alarm_actions       = [var.sns_topic_arn]
   critical_ok_actions = [var.sns_topic_arn]

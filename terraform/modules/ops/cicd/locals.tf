@@ -1,7 +1,6 @@
 locals {
-  project     = "safespot"
   domain      = "ops"
-  name_prefix = "${local.project}-${var.environment}-${local.domain}"
+  name_prefix = "${var.project}-${var.environment}-${local.domain}"
 
   github_oidc_url        = "https://token.actions.githubusercontent.com"
   github_oidc_host       = "token.actions.githubusercontent.com"

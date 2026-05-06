@@ -31,7 +31,7 @@ resource "aws_cloudwatch_metric_alarm" "sqs_oldest_age" {
   namespace           = "AWS/SQS"
   period              = local.default_period
   statistic           = "Maximum"
-  threshold           = var.sqs_oldest_age_threshold
+  threshold           = var.sqs_age_threshold_seconds
   treat_missing_data  = "notBreaching"
 
   dimensions = {
@@ -75,7 +75,7 @@ resource "aws_cloudwatch_metric_alarm" "dlq_oldest_age" {
   namespace           = "AWS/SQS"
   period              = local.default_period
   statistic           = "Maximum"
-  threshold           = var.sqs_oldest_age_threshold
+  threshold           = var.dlq_age_threshold_seconds
   treat_missing_data  = "notBreaching"
 
   dimensions = {

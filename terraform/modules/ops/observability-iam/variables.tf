@@ -1,5 +1,10 @@
 # modules/ops/observability-iam/variables.tf
 
+variable "project" {
+  description = "Project name."
+  type        = string
+}
+
 variable "environment" {
   description = "Environment name"
   type        = string
