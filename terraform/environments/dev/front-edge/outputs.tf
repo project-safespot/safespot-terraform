@@ -31,33 +31,29 @@ output "frontend_bucket_domain" {
   value       = module.s3.bucket_regional_domain_name
 }
 
-# output "alb_certificate_arn" {
-#   description = "ALB HTTPS 리스너 연결용 인증서 ARN (ap-northeast-2)"
-#   value       = module.acm_alb.certificate_arn
-# }
+output "alb_certificate_arn" {
+  description = "ALB HTTPS 리스너 연결용 인증서 ARN (ap-northeast-2)"
+  value       = module.acm_alb.certificate_arn
+}
 
-# output "waf_acl_arn" {
-#   description = "WAF ACL ARN (ops 파트 CloudWatch 알람 타겟용)"
-#   value       = module.waf.waf_acl_arn
-# }
+output "waf_acl_arn" {
+  description = "WAF ACL ARN (ops 파트 CloudWatch 알람 타겟용)"
+  value       = module.waf.waf_acl_arn
+}
 
-# output "cloudfront_distribution_id" {
-#   description = "CloudFront Distribution ID"
-#   value       = module.cloudfront.distribution_id
-# }
-#
-# output "cloudfront_domain_name" {
-#   description = "CloudFront Distribution 도메인 (Route53 A 레코드 연결용)"
-#   value       = module.cloudfront.distribution_domain_name
-# }
-#
-# output "api_origin_domain_name" {
-#   description = "API origin 도메인 (api-service/k8s-manifest 참조용)"
-#   value       = module.cloudfront.api_origin_domain_name
-# }
 output "cloudfront_distribution_id" {
-  description = "CloudFront distribution ID"
+  description = "CloudFront Distribution ID"
   value       = module.cloudfront.distribution_id
+}
+
+output "cloudfront_domain_name" {
+  description = "CloudFront Distribution 도메인 (Route53 A 레코드 연결용)"
+  value       = module.cloudfront.distribution_domain_name
+}
+
+output "api_origin_domain_name" {
+  description = "API origin 도메인 (api-service/k8s-manifest 참조용)"
+  value       = module.cloudfront.api_origin_domain_name
 }
 
 output "waf_acl_name" {

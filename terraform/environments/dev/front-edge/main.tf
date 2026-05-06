@@ -29,6 +29,14 @@ module "acm" {
   tags            = local.common_tags
 }
 
+module "acm_alb" {
+  source = "../../../modules/front-edge/acm-alb"
+
+  domain_name     = var.domain_name
+  route53_zone_id = module.route53.zone_id
+  tags            = local.common_tags
+}
+
 module "waf" {
   source = "../../../modules/front-edge/waf"
 
@@ -68,3 +76,4 @@ module "cloudfront" {
 
   common_tags = local.common_tags
 }
+
