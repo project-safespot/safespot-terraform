@@ -1,7 +1,7 @@
 locals {
   project     = "safespot"
   domain      = "ops"
-  name_prefix = "${local.project}-${var.env}-${local.domain}"
+  name_prefix = "${local.project}-${var.environment}-${local.domain}"
 
   services = [
     "api-core",

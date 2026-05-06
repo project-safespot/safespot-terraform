@@ -1,6 +1,6 @@
 # modules/ops/observability-iam/variables.tf
 
-variable "env" {
+variable "environment" {
   description = "배포 환경 (dev / stg / prod)"
   type        = string
 }
@@ -16,7 +16,7 @@ variable "eks_oidc_provider_url" {
     compute 파트 remote state output에서 참조.
     IRSA assume role condition에 사용.
   EOT
-  type = string
+  type        = string
 }
 
 variable "eks_oidc_provider_arn" {
@@ -26,7 +26,7 @@ variable "eks_oidc_provider_arn" {
     compute 파트 remote state output에서 참조.
     IRSA assume role principal에 사용.
   EOT
-  type = string
+  type        = string
 }
 
 # ── Namespace ─────────────────────────────────────────────────────────────────
@@ -38,8 +38,8 @@ variable "prometheus_namespace" {
     형식: system:serviceaccount:{namespace}:{service_account_name}
     TODO: observability Helm chart 배포 시 사용할 namespace와 반드시 일치시킬 것.
   EOT
-  type    = string
-  default = "monitoring"
+  type        = string
+  default     = "monitoring"
 }
 
 variable "prometheus_service_account_name" {
@@ -50,8 +50,8 @@ variable "prometheus_service_account_name" {
           prometheus.serviceAccount.name 값과 반드시 일치시킬 것.
           기본값은 kube-prometheus-stack 기준.
   EOT
-  type    = string
-  default = "prometheus"
+  type        = string
+  default     = "prometheus"
 }
 
 variable "grafana_namespace" {
@@ -60,8 +60,8 @@ variable "grafana_namespace" {
     TODO: observability Helm chart 배포 시 사용할 namespace와 반드시 일치시킬 것.
           Prometheus와 같은 namespace를 쓰는 경우가 많으므로 확인 필요.
   EOT
-  type    = string
-  default = "monitoring"
+  type        = string
+  default     = "monitoring"
 }
 
 variable "grafana_service_account_name" {
@@ -71,8 +71,8 @@ variable "grafana_service_account_name" {
     TODO: observability Helm chart의
           grafana.serviceAccount.name 값과 반드시 일치시킬 것.
   EOT
-  type    = string
-  default = "grafana"
+  type        = string
+  default     = "grafana"
 }
 
 variable "fluentbit_namespace" {
@@ -81,8 +81,8 @@ variable "fluentbit_namespace" {
     monitoring.md: Application log → Fluent Bit → CloudWatch Logs
     TODO: Fluent Bit Helm chart 배포 시 사용할 namespace와 반드시 일치시킬 것.
   EOT
-  type    = string
-  default = "logging"
+  type        = string
+  default     = "logging"
 }
 
 variable "fluentbit_service_account_name" {
@@ -91,8 +91,8 @@ variable "fluentbit_service_account_name" {
     TODO: Fluent Bit Helm chart의
           serviceAccount.name 값과 반드시 일치시킬 것.
   EOT
-  type    = string
-  default = "fluent-bit"
+  type        = string
+  default     = "fluent-bit"
 }
 
 # ── CloudWatch Log Group ARN ──────────────────────────────────────────────────
@@ -105,8 +105,8 @@ variable "log_group_arns" {
     TODO: log-groups 모듈 apply 완료 후
           ops remote state output에서 참조하도록 연결할 것.
   EOT
-  type    = list(string)
-  default = []
+  type        = list(string)
+  default     = []
 }
 
 # ── 기능 활성화 플래그 ────────────────────────────────────────────────────────
@@ -118,8 +118,8 @@ variable "enable_grafana_irsa" {
     Grafana → CloudWatch 직접 연동 시 true로 변경.
     TODO: observability chart 설계 확정 후 결정할 것.
   EOT
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "enable_prometheus_irsa" {
@@ -129,8 +129,8 @@ variable "enable_prometheus_irsa" {
     monitoring.md: ALB/EKS metric → CloudWatch / Prometheus 병행 수집 구조
     TODO: observability chart에서 CloudWatch exporter 사용 여부 확정 후 결정할 것.
   EOT
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "enable_fluentbit_irsa" {
@@ -140,6 +140,6 @@ variable "enable_fluentbit_irsa" {
     Fluent Bit을 배포할 예정이면 true.
     TODO: logging chart 설계 확정 후 true로 변경할 것.
   EOT
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
 }

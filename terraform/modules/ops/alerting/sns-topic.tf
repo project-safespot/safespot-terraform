@@ -7,11 +7,11 @@ resource "aws_sns_topic" "ops_alert" {
   tags = {
     Name        = local.sns_topic_name
     Project     = local.project
-    Environment = var.env
+    Environment = var.environment
     Domain      = local.domain
     ManagedBy   = "terraform"
     Service     = "alerting"
-    CostCenter  = "${local.project}-${var.env}"
+    CostCenter  = "${local.project}-${var.environment}"
   }
 }
 

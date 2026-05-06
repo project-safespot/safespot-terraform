@@ -1,11 +1,11 @@
 locals {
-  name_prefix = "safespot-${var.env}"
+  name_prefix = "safespot-${var.environment}"
 
   kms_key_arn = var.kms_key_arn != "" ? var.kms_key_arn : null
 
   app_log_group_names = {
     for svc in var.services :
-    svc => "/safespot/${var.env}/${svc}"
+    svc => "/safespot/${var.environment}/${svc}"
   }
 
   eks_control_plane_log_group_name = "/aws/eks/${var.eks_cluster_name}/cluster"
@@ -13,5 +13,5 @@ locals {
   lambda_log_group_name = "/aws/lambda/${var.lambda_function_name}"
 
   # [삭제] alb_log_bucket_name 참조 제거
-  alb_log_group_name = "/safespot/${var.env}/alb/access-log"
+  alb_log_group_name = "/safespot/${var.environment}/alb/access-log"
 }

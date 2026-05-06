@@ -57,6 +57,6 @@ module "fluentbit_irsa" {
   service_account_name = var.fluentbit_service_account_name
 
   managed_policy_arns = {
-    fluentbit_cloudwatch_write = aws_iam_policy.fluentbit_cloudwatch_write.arn
+    fluentbit_cloudwatch_write = aws_iam_policy.fluentbit_cloudwatch_write[0].arn
   }
 }

@@ -11,7 +11,7 @@ data "terraform_remote_state" "network" {
 
   config = {
     bucket = local.remote_state_bucket
-    key    = "${var.env}/network/terraform.tfstate"
+    key    = "environments/${var.env}/network/terraform.tfstate"
     region = local.remote_state_region
   }
 }
@@ -31,7 +31,7 @@ data "terraform_remote_state" "data_layer" {
 
   config = {
     bucket = local.remote_state_bucket
-    key    = "${var.env}/data/terraform.tfstate"
+    key    = "environments/${var.env}/data/terraform.tfstate"
     region = local.remote_state_region
   }
 }
@@ -41,7 +41,7 @@ data "terraform_remote_state" "async_worker" {
 
   config = {
     bucket = local.remote_state_bucket
-    key    = "${var.env}/async-worker/terraform.tfstate"
+    key    = "environments/${var.env}/async-worker/terraform.tfstate"
     region = local.remote_state_region
   }
 }
@@ -51,7 +51,7 @@ data "terraform_remote_state" "front_edge" {
 
   config = {
     bucket = local.remote_state_bucket
-    key    = "${var.env}/front-edge/terraform.tfstate"
+    key    = "environments/${var.env}/edge/terraform.tfstate"
     region = local.remote_state_region
   }
 }

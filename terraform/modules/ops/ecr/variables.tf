@@ -3,8 +3,9 @@ variable "project" {
   default = "safespot"
 }
 
-variable "env" {
-  type = string
+variable "environment" {
+  description = "Environment name"
+  type        = string
 }
 
 variable "domain" {

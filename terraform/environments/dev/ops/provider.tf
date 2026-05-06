@@ -4,34 +4,17 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = "~> 5.50"
+      version = "~> 5.0"
+      # configuration_aliases 없음
     }
   }
 }
 
 provider "aws" {
-  region = var.aws_region
-
-  default_tags {
-    tags = {
-      Project     = "safespot"
-      Environment = var.env
-      ManagedBy   = "terraform"
-      Part        = "ops"
-    }
-  }
+  region = "ap-northeast-2"
 }
 
 provider "aws" {
   alias  = "us_east_1"
   region = "us-east-1"
-
-  default_tags {
-    tags = {
-      Project     = "safespot"
-      Environment = var.env
-      ManagedBy   = "terraform"
-      Part        = "ops"
-    }
-  }
 }

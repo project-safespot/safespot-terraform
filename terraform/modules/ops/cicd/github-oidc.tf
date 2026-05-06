@@ -17,10 +17,10 @@ resource "aws_iam_openid_connect_provider" "github" {
   tags = {
     Name        = "${local.name_prefix}-iam-oidc-github"
     Project     = local.project
-    Environment = var.env
+    Environment = var.environment
     Domain      = local.domain
     ManagedBy   = "terraform"
     Service     = "github-actions"
-    CostCenter  = "${local.project}-${var.env}"
+    CostCenter  = "${local.project}-${var.environment}"
   }
 }

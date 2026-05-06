@@ -1,7 +1,7 @@
 resource "aws_ecr_repository" "services" {
   for_each = toset(var.services)
 
-  name                 = "${var.project}-${var.env}-${var.domain}-ecr-${each.key}"
+  name                 = "${var.project}-${var.environment}-${var.domain}-ecr-${each.key}"
   image_tag_mutability = var.image_tag_mutability
 
   image_scanning_configuration {
@@ -13,15 +13,15 @@ resource "aws_ecr_repository" "services" {
     kms_key         = var.encrypt_type == "KMS" ? var.kms_key_arn : null
   }
 
-  force_delete = var.env != "prod"
+  force_delete = var.environment != "prod"
 
   tags = {
-    Name        = "${var.project}-${var.env}-${var.domain}-ecr-${each.key}"
+    Name        = "${var.project}-${var.environment}-${var.domain}-ecr-${each.key}"
     Project     = var.project
-    Environment = var.env
+    Environment = var.environment
     Domain      = var.domain
     ManagedBy   = "terraform"
     Service     = each.key
-    CostCenter  = "${var.project}-${var.env}"
+    CostCenter  = "${var.project}-${var.environment}"
   }
 }

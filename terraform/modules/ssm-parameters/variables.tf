@@ -2,8 +2,9 @@ variable "project" {
   type = string
 }
 
-variable "env" {
-  type = string
+variable "environment" {
+  description = "Environment name"
+  type        = string
 }
 
 variable "parameters" {

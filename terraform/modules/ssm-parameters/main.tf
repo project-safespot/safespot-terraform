@@ -1,7 +1,7 @@
 resource "aws_ssm_parameter" "this" {
   for_each = var.parameters
 
-  name        = "/${var.project}/${var.env}/${each.key}"
+  name        = "/${var.project}/${var.environment}/${each.key}"
   type        = each.value.type
   value       = each.value.value
   description = try(each.value.description, null)

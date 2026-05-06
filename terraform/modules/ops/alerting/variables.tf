@@ -1,5 +1,6 @@
-variable "env" {
-  type = string
+variable "environment" {
+  description = "Environment name"
+  type        = string
 }
 
 variable "alert_email" {

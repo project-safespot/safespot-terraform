@@ -1,10 +1,14 @@
 locals {
   project     = "safespot"
   domain      = "ops"
-  name_prefix = "${local.project}-${var.env}-${local.domain}"
+  name_prefix = "${local.project}-${var.environment}-${local.domain}"
 
-  alarm_actions    = [var.sns_topic_arn]
+  alarm_actions       = [var.sns_topic_arn]
   critical_ok_actions = [var.sns_topic_arn]
+  ok_actions          = [var.sns_topic_arn]
+
+  default_evaluation_periods = 3
+  default_period             = 60
 
   # [삭제] has_alb = var.alb_arn_suffix 제거
   has_rds        = var.rds_cluster_identifier != null && trimspace(var.rds_cluster_identifier) != ""

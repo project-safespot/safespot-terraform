@@ -3,12 +3,12 @@ variable "aws_region" {
   default = "ap-northeast-2"
 }
 
-variable "env" {
+variable "environment" {
   type    = string
   default = "dev"
 
   validation {
-    condition     = contains(["dev", "stg", "prod"], var.env)
+    condition     = contains(["dev", "stg", "prod"], var.environment)
     error_message = "env는 dev, stg, prod 중 하나여야 합니다."
   }
 }

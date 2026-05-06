@@ -23,7 +23,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_5xx" {
     Region         = "Global"
   }
 
-  alarm_actions = local.alarm_actions
+  alarm_actions = []
   ok_actions    = []
 }
 
@@ -47,7 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_4xx" {
     Region         = "Global"
   }
 
-  alarm_actions = local.alarm_actions
+  alarm_actions = []
   ok_actions    = []
 }
 
@@ -77,6 +77,6 @@ resource "aws_cloudwatch_metric_alarm" "waf_blocked_requests" {
     Region = "CloudFront"
   }
 
-  alarm_actions = local.alarm_actions
+  alarm_actions = []
   ok_actions    = []
 }

@@ -1,14 +1,14 @@
 locals {
   project     = "safespot"
   domain      = "ops"
-  name_prefix = "${local.project}-${var.env}-${local.domain}"
+  name_prefix = "${local.project}-${var.environment}-${local.domain}"
 
   sns_topic_name = "${local.name_prefix}-sns-alert"
 
   slack_secret_name = (
     var.slack_webhook_secret_name != ""
     ? var.slack_webhook_secret_name
-    : "safespot/${var.env}/alertmanager/slack-webhook"
+    : "safespot/${var.environment}/alertmanager/slack-webhook"
   )
 
   all_email_subscriptions = concat(
