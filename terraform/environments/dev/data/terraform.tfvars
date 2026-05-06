@@ -4,7 +4,7 @@ environment = "dev"
 
 # ── Aurora (Active/Standby Multi-AZ) ────────────────────
 availability_zones  = ["ap-northeast-2a", "ap-northeast-2c"]
-rds_engine_version  = "15.6"
+rds_engine_version  = "15.8"
 rds_instance_class  = "db.t3.medium"
 rds_instance_count  = 2
 db_name             = "safespot"
