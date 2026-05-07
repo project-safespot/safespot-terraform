@@ -36,12 +36,20 @@ variable "remote_state_region" {
 }
 
 variable "alert_email" {
-  type = string
+  type    = string
+  default = ""
 }
 
 variable "slack_webhook_secret_name" {
   type    = string
   default = ""
+}
+
+variable "slack_webhook_url" {
+  description = "AlertManager Slack Webhook URL. 비어 있으면 시크릿 이름만 생성하고 값은 콘솔/CLI에서 직접 입력."
+  type        = string
+  sensitive   = true
+  default     = ""
 }
 
 variable "additional_email_subscriptions" {

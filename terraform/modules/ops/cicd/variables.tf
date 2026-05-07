@@ -85,3 +85,27 @@ variable "cloudfront_distribution_id" {
   type = string
   default = ""
 }
+
+variable "ssm_kms_key_arn" {
+  description = "KMS key ARN for SSM SecureString. 기본값 '*'은 dev 전용 — 프로덕션에서는 반드시 특정 ARN 지정."
+  type        = string
+  default     = "*"
+}
+
+variable "ecr_push_repos" {
+  description = "ECR push 권한을 부여할 repo 목록 (short name, org 제외)"
+  type        = list(string)
+  default     = []
+}
+
+variable "terraform_repos" {
+  description = "Terraform state 접근 권한을 부여할 repo 목록 (short name, org 제외)"
+  type        = list(string)
+  default     = []
+}
+
+variable "frontend_deploy_repos" {
+  description = "Frontend S3/CloudFront 권한을 부여할 repo 목록 (short name, org 제외)"
+  type        = list(string)
+  default     = []
+}

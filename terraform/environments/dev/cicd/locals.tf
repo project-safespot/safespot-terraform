@@ -17,3 +17,9 @@ locals {
     "environments/${var.environment}/ops/cicd/"
   ]
 }
+
+locals {
+  ecr_repository_arns = data.terraform_remote_state.ops.outputs.ecr_repository_arns
+
+  cluster_name = data.terraform_remote_state.api_service.outputs.cluster_name
+}

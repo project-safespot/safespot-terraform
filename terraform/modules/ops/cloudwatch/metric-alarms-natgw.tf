@@ -1,5 +1,5 @@
 # AWS/NatGateway 네임스페이스 메트릭.
-# NAT Gateway가 없는 환경(dev 등)에서는 nat_gateway_id를 비워두면 알람이 생성되지 않는다.
+# nat_gateway_id는 필수 변수이므로 NAT GW가 없는 환경에서는 반드시 실제 ID를 지정해야 한다.
 #
 # AvailableIpAddressCount(서브넷 잔여 IP)는 AWS 네이티브 CloudWatch 메트릭이 아니다.
 # Subnet 잔여 IP 모니터링이 필요하면 Lambda + EventBridge로 커스텀 메트릭을 발행해야 한다.

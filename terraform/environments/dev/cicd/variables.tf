@@ -1,5 +1,5 @@
 variable "project" {
-  type = string
+  type    = string
   default = "safespot"
 }
 
@@ -12,24 +12,42 @@ variable "environment" {
   }
 }
 
-variable "github_org" {
+variable "aws_region" {
   type = string
+}
+
+variable "github_org" {
+  type    = string
   default = "project-safespot"
 }
 
 variable "github_repos" {
-  type = list(string)
+  description = "OIDC role을 생성할 repo 목록 (short name, org 제외)"
+  type        = list(string)
+  default     = []
+}
 
-  default = [
-    "safespot-applicaton",
-    "safespot-front"
-  ]
+variable "ecr_push_repos" {
+  description = "ECR push 권한을 받을 repo 목록 (short name, org 제외)"
+  type        = list(string)
+  default     = []
+}
+
+variable "terraform_repos" {
+  description = "Terraform state 접근 권한을 받을 repo 목록 (short name, org 제외)"
+  type        = list(string)
+  default     = []
+}
+
+variable "frontend_deploy_repos" {
+  description = "Frontend S3/CloudFront 권한을 받을 repo 목록 (short name, org 제외)"
+  type        = list(string)
+  default     = []
 }
 
 variable "allowed_branches" {
-  type = list(string)
-
-  default = [ "main" ]
+  type    = list(string)
+  default = ["main"]
 }
 
 variable "allow_pull_request_oidc" {
@@ -42,11 +60,15 @@ variable "terraform_state_bucket" {
 }
 
 variable "terraform_state_key_prefixes" {
-  type = list(string)
+  description = "비워두면 locals.tf의 환경별 기본 prefix 목록을 사용"
+  type        = list(string)
+  default     = []
 }
 
 variable "ecr_repository_arns" {
-  type = list(string)
+  description = "비워두면 ops remote state에서 자동으로 읽음"
+  type        = list(string)
+  default     = []
 }
 
 variable "enable_terraform_apply" {
@@ -64,14 +86,23 @@ variable "cluster_name" {
   default = ""
 }
 
-variable "aws_region" {
-  type = string
-}
-
-variable "account_id" {
-  type = string
-}
-
 variable "common_tags" {
-  type = map(string)
+  type    = map(string)
+  default = {}
+}
+
+variable "frontend_s3_bucket" {
+  type    = string
+  default = ""
+}
+
+variable "cloudfront_distribution_id" {
+  type    = string
+  default = ""
+}
+
+variable "ssm_kms_key_arn" {
+  description = "SSM SecureString KMS key ARN. 기본값 '*'은 dev 전용으로만 사용."
+  type        = string
+  default     = "*"
 }

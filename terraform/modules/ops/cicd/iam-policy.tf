@@ -158,23 +158,36 @@ resource "aws_iam_policy" "terraform_infra" {
         Resource = [
           "arn:aws:iam::${local.account_id}:role/${local.name_prefix}-iam-role-*",
           "arn:aws:iam::${local.account_id}:policy/${local.name_prefix}-iam-policy-*",
-          "arn:aws:iam::${local.account_id}:oidc-provider/*"
+          "arn:aws:iam::${local.account_id}:oidc-provider/token.actions.githubusercontent.com"
+        ]
+      },
+        {
+        Sid    = "AllowSSMParameterStore"
+        Effect = "Allow"
+        Action = [
+          "ssm:PutParameter",
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath",
+          "ssm:DeleteParameter",
+          "ssm:DescribeParameters",
+          "ssm:AddTagsToResource",
+          "ssm:RemoveTagsFromResource"
+        ]
+        Resource = [
+          "arn:aws:ssm:*:${local.account_id}:parameter/${var.project}/*"
         ]
       },
       {
-        Sid    = "AllowSecretsManager"
+        Sid    = "AllowKMSForSecureString"
         Effect = "Allow"
         Action = [
-          "secretsmanager:CreateSecret",
-          "secretsmanager:DeleteSecret",
-          "secretsmanager:DescribeSecret",
-          "secretsmanager:GetSecretValue",
-          "secretsmanager:PutSecretValue",
-          "secretsmanager:UpdateSecret",
-          "secretsmanager:TagResource",
-          "secretsmanager:UntagResource"
+          "kms:Decrypt",
+          "kms:Encrypt",
+          "kms:GenerateDataKey",
+          "kms:DescribeKey"
         ]
-        Resource = "arn:aws:secretsmanager:*:${local.account_id}:secret:${var.project}/*"
+        Resource = var.ssm_kms_key_arn
       },
       {
         Sid      = "AllowSTSGetCallerIdentity"
@@ -199,57 +212,34 @@ resource "aws_iam_role_policy_attachment" "argocd_eks" {
   policy_arn = aws_iam_policy.argocd_eks[0].arn
 }
 
+# ECR push: application/container build repo만
 resource "aws_iam_role_policy_attachment" "ecr_push" {
-  for_each = aws_iam_role.github_actions
+  for_each = toset([
+    for repo in var.ecr_push_repos : "${var.github_org}/${repo}"
+  ])
 
-  role       = each.value.name
+  role       = aws_iam_role.github_actions[each.key].name
   policy_arn = aws_iam_policy.ecr_push.arn
 }
 
+# Terraform state: terraform repo만
 resource "aws_iam_role_policy_attachment" "terraform_state" {
-  for_each = aws_iam_role.github_actions
+  for_each = toset([
+    for repo in var.terraform_repos : "${var.github_org}/${repo}"
+  ])
 
-  role       = each.value.name
+  role       = aws_iam_role.github_actions[each.key].name
   policy_arn = aws_iam_policy.terraform_state.arn
 }
 
+# Terraform infra apply: terraform repo + enable_terraform_apply 플래그
 resource "aws_iam_role_policy_attachment" "terraform_infra" {
-  for_each = var.enable_terraform_apply ? aws_iam_role.github_actions : {}
+  for_each = var.enable_terraform_apply ? toset([
+    for repo in var.terraform_repos : "${var.github_org}/${repo}"
+  ]) : toset([])
 
-  role       = each.value.name
+  role       = aws_iam_role.github_actions[each.key].name
   policy_arn = aws_iam_policy.terraform_infra[0].arn
-}
-
-resource "aws_iam_policy" "argocd_eks" {
-  count = var.enable_argocd_eks_policy ? 1 : 0
-
-  name = "${local.name_prefix}-iam-policy-argocd-eks"
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "AllowDescribeEKS"
-        Effect = "Allow"
-        Action = [
-          "eks:DescribeCluster",
-          "eks:ListClusters"
-        ]
-        Resource = "*"
-      },
-      {
-        Sid      = "AllowAccessKubernetesApi"
-        Effect   = "Allow"
-        Action   = "eks:AccessKubernetesApi"
-        Resource = "arn:aws:eks:${var.aws_region}:${var.account_id}:cluster/${var.eks_cluster_name}"
-      }
-    ]
-  })
-
-  tags = merge(var.common_tags, {
-    Name    = "${local.name_prefix}-iam-policy-argocd-eks"
-    Service = "argocd"
-  })
 }
 
 resource "aws_iam_policy" "frontend_deploy" {
@@ -288,9 +278,12 @@ resource "aws_iam_policy" "frontend_deploy" {
   })
 }
 
+# Frontend deploy: front repo만
 resource "aws_iam_role_policy_attachment" "frontend_deploy" {
-  for_each = var.frontend_s3_bucket != "" ? aws_iam_role.github_actions : {}
+  for_each = var.frontend_s3_bucket != "" ? toset([
+    for repo in var.frontend_deploy_repos : "${var.github_org}/${repo}"
+  ]) : toset([])
 
-  role       = each.value.name
+  role       = aws_iam_role.github_actions[each.key].name
   policy_arn = aws_iam_policy.frontend_deploy[0].arn
 }

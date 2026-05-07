@@ -60,3 +60,10 @@ variable "allowed_aws_services" {
   type        = list(string)
   default     = ["cloudwatch.amazonaws.com"]
 }
+
+variable "slack_webhook_url" {
+  description = "AlertManager Slack Webhook URL. 비어 있으면 Secret 값 없이 시크릿 이름만 생성."
+  type        = string
+  sensitive   = true
+  default     = ""
+}

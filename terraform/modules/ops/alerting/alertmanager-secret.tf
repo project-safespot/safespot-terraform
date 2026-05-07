@@ -1,29 +1,24 @@
 resource "aws_secretsmanager_secret" "slack_webhook" {
   count = var.enable_slack_secret ? 1 : 0
 
-  name        = local.slack_secret_name
-  description = "${var.project} ${var.environment} AlertManager Slack Webhook URL"
-
+  name                    = local.slack_secret_name
+  description             = "AlertManager Slack Webhook URL for ${local.name_prefix}"
   recovery_window_in_days = var.slack_webhook_recovery_window_days
 
   tags = {
-    Name    = local.slack_secret_name
-    Purpose = "alertmanager-slack-webhook"
+    Name        = local.slack_secret_name
+    Project     = var.project
+    Environment = var.environment
+    Domain      = local.domain
+    ManagedBy   = "terraform"
   }
 }
 
-resource "aws_secretsmanager_secret_version" "slack_webhook_placeholder" {
-  count = var.enable_slack_secret ? 1 : 0
+resource "aws_secretsmanager_secret_version" "slack_webhook" {
+  count = var.enable_slack_secret && var.slack_webhook_url != "" ? 1 : 0
 
-  secret_id = aws_secretsmanager_secret.slack_webhook[0].id
-
-  secret_string = jsonencode({
-    webhook_url = "REPLACE_ME"
-  })
-
-  lifecycle {
-    ignore_changes = [secret_string]
-  }
+  secret_id     = aws_secretsmanager_secret.slack_webhook[0].id
+  secret_string = var.slack_webhook_url
 }
 
 resource "aws_iam_policy" "alertmanager_secret_read" {

@@ -8,11 +8,19 @@ services = [
   "api-core",
   "api-public-read",
   "external-ingestion",
+  "async-worker",
 ]
 
 log_retention_days = 30
 
+# TODO: 아래 네 값을 실제 인프라 값으로 교체한 후 apply
+alert_email    = "201sohyun@naver.com"
+alb_arn_suffix = "app/safespot-dev-alb/xxxxxxxxxxxx"
+nat_gateway_id = "nat-xxxxxxxxxxxxxxxxx"
+aws_account_id = "123456789012"
+
 enable_observability_iam = true
-enable_fluentbit_irsa    = true
-enable_prometheus_irsa   = true
-enable_grafana_irsa      = true
+# 아래 세 플래그는 실제 ServiceAccount annotation 적용(Helm values/ArgoCD app) 확정 후 활성화
+enable_fluentbit_irsa  = false
+enable_prometheus_irsa = false
+enable_grafana_irsa    = false

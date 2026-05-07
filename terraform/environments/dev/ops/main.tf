@@ -139,6 +139,7 @@ module "alerting" {
   alert_email                        = var.alert_email
   additional_email_subscriptions     = var.additional_email_subscriptions
   slack_webhook_secret_name          = var.slack_webhook_secret_name
+  slack_webhook_url                  = var.slack_webhook_url
   enable_slack_secret                = var.enable_slack_secret
   slack_webhook_recovery_window_days = var.slack_webhook_recovery_window_days
 }

@@ -7,11 +7,11 @@ output "sns_topic_name" {
 }
 
 output "slack_webhook_secret_arn" {
-  value = var.enable_slack_secret ? aws_secretsmanager_secret.slack_webhook[0].arn : null
+  value = aws_ssm_parameter.slack_webhook.arn
 }
 
 output "slack_webhook_secret_name" {
-  value = var.enable_slack_secret ? aws_secretsmanager_secret.slack_webhook[0].name : null
+  value = aws_ssm_parameter.slack_webhook.name
 }
 
 output "alertmanager_secret_read_policy_arn" {
