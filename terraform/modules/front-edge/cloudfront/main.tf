@@ -67,17 +67,19 @@ resource "aws_cloudfront_distribution" "main" {
     viewer_protocol_policy   = "redirect-to-https"
     allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
     cached_methods           = ["GET", "HEAD"]
+    compress        = true
     cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # CachingDisabled
-    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" # AllViewer
+    origin_request_policy_id = "b689b0a8-53d0-40ab-baf2-68738e2966ac" # AllViewerExceptHostHeader
   }
 
   # Behavior 2 — 대피소 조회 API (TTL 30초 — 재난시에도 유지)
   ordered_cache_behavior {
-    path_pattern           = "/api/public/shelters/*"
+    path_pattern           = "/api/public/shelters*"
     target_origin_id       = "ALB-api"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
+    compress        = true
     cache_policy_id        = aws_cloudfront_cache_policy.shelters.id
   }
 
@@ -88,6 +90,7 @@ resource "aws_cloudfront_distribution" "main" {
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
+    compress        = true
     cache_policy_id        = aws_cloudfront_cache_policy.disaster.id
   }
 
