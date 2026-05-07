@@ -1,26 +1,35 @@
 variable "project" {
   type = string
+  default = "safespot"
 }
 
 variable "environment" {
   type = string
+
+  validation {
+    condition     = contains(["dev", "stg", "prod"], var.environment)
+    error_message = "env는 dev, stg, prod 중 하나여야 합니다."
+  }
 }
 
 variable "github_org" {
   type = string
+  default = "project-safespot"
 }
 
 variable "github_repos" {
   type = list(string)
+
+  default = [
+    "safespot-applicaton",
+    "safespot-front"
+  ]
 }
 
 variable "allowed_branches" {
   type = list(string)
 
-  default = [
-    "main",
-    "infra/ops-cicd"
-  ]
+  default = [ "main" ]
 }
 
 variable "allow_pull_request_oidc" {
@@ -50,7 +59,7 @@ variable "enable_argocd_eks_policy" {
   default = false
 }
 
-variable "eks_cluster_name" {
+variable "cluster_name" {
   type    = string
   default = ""
 }

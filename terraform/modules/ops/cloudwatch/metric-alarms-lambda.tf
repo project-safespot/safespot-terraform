@@ -1,8 +1,6 @@
 # modules/ops/cloudwatch/metric-alarms-lambda.tf
 
 resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
-  count = local.has_lambda ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-lambda-errors"
   alarm_description   = "Lambda 오류 발생"
   comparison_operator = "GreaterThanThreshold"
@@ -24,8 +22,6 @@ resource "aws_cloudwatch_metric_alarm" "lambda_errors" {
 
 # Lambda throttle: 즉각 반응 + 해소 확인 중요
 resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
-  count = local.has_lambda ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-lambda-throttles"
   alarm_description   = "Lambda throttle 발생"
   comparison_operator = "GreaterThanThreshold"
@@ -46,8 +42,6 @@ resource "aws_cloudwatch_metric_alarm" "lambda_throttles" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "lambda_duration" {
-  count = local.has_lambda ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-lambda-duration-p99"
   alarm_description   = "Lambda 실행 시간 p99 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -68,8 +62,6 @@ resource "aws_cloudwatch_metric_alarm" "lambda_duration" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "lambda_concurrent_executions" {
-  count = local.has_lambda ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-lambda-concurrent-executions"
   alarm_description   = "Lambda 동시 실행 수 임계값 접근"
   comparison_operator = "GreaterThanThreshold"

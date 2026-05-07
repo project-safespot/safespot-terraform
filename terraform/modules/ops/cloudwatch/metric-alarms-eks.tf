@@ -9,8 +9,6 @@
 # monitoring.md 섹션 1: Dashboard/alert → Grafana + AlertManager 병행 구조 참조.
 
 resource "aws_cloudwatch_metric_alarm" "eks_node_cpu" {
-  count = local.has_eks ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-eks-node-cpu"
   alarm_description   = "EKS 노드 CPU 사용률 임계값 초과 (Container Insights)"
   comparison_operator = "GreaterThanThreshold"
@@ -31,8 +29,6 @@ resource "aws_cloudwatch_metric_alarm" "eks_node_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "eks_node_memory" {
-  count = local.has_eks ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-eks-node-memory"
   alarm_description   = "EKS 노드 메모리 사용률 임계값 초과 (Container Insights)"
   comparison_operator = "GreaterThanThreshold"

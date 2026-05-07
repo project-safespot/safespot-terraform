@@ -100,6 +100,24 @@ locals {
   )
 }
 
+module "log_bucket" {
+  source = "../../../modules/ops/log-bucket"
+
+  project        = var.project
+  environment    = var.environment
+  aws_account_id = var.aws_account_id
+  force_destroy  = var.log_bucket_force_destroy
+
+  alb_retention_days        = var.alb_log_retention_days
+  waf_retention_days        = var.waf_log_retention_days
+  vpc_flow_retention_days   = var.vpc_flow_log_retention_days
+  rds_retention_days        = var.rds_log_retention_days
+  cloudwatch_retention_days = var.cloudwatch_log_retention_days
+
+  enable_versioning = var.log_bucket_enable_versioning
+  kms_key_arn       = var.kms_key_arn
+}
+
 module "ecr" {
   source = "../../../modules/ops/ecr"
 
@@ -137,10 +155,20 @@ module "cloudwatch" {
   environment   = var.environment
   sns_topic_arn = module.alerting.sns_topic_arn
 
-  # [삭제] alb_arn_suffix 제거
+  alb_arn_suffix        = var.alb_arn_suffix
+  alb_5xx_elb_threshold = var.alb_5xx_elb_threshold
   alb_5xx_threshold     = var.alb_5xx_threshold
   alb_4xx_threshold     = var.alb_4xx_threshold
   alb_latency_threshold = var.alb_latency_threshold_seconds
+
+  nat_gateway_id               = var.nat_gateway_id
+  natgw_packets_drop_threshold = var.natgw_packets_drop_threshold
+  natgw_error_port_threshold   = var.natgw_error_port_threshold
+
+  sqs_in_flight_threshold = var.sqs_in_flight_threshold
+
+  cloudfront_cache_hit_rate_threshold    = var.cloudfront_cache_hit_rate_threshold
+  cloudfront_origin_latency_threshold_ms = var.cloudfront_origin_latency_threshold_ms
 
   rds_cluster_identifier           = local.rds_cluster_identifier
   rds_cpu_threshold                = var.rds_cpu_threshold

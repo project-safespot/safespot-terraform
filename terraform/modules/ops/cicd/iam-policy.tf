@@ -253,6 +253,7 @@ resource "aws_iam_policy" "argocd_eks" {
 }
 
 resource "aws_iam_policy" "frontend_deploy" {
+  count = var.frontend_s3_bucket != "" ? 1 : 0
   name = "${local.name_prefix}-iam-policy-frontend-deploy"
 
   policy = jsonencode({
@@ -288,8 +289,8 @@ resource "aws_iam_policy" "frontend_deploy" {
 }
 
 resource "aws_iam_role_policy_attachment" "frontend_deploy" {
-  for_each = aws_iam_role.github_actions
+  for_each = var.frontend_s3_bucket != "" ? aws_iam_role.github_actions : {}
 
   role       = each.value.name
-  policy_arn = aws_iam_policy.frontend_deploy.arn
+  policy_arn = aws_iam_policy.frontend_deploy[0].arn
 }

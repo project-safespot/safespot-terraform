@@ -43,8 +43,6 @@ resource "aws_cloudwatch_metric_alarm" "sqs_oldest_age" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "dlq_visible" {
-  count = local.has_dlq ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-dlq-visible"
   alarm_description   = "DLQ 메시지 발생"
   comparison_operator = "GreaterThanThreshold"
@@ -64,9 +62,29 @@ resource "aws_cloudwatch_metric_alarm" "dlq_visible" {
   ok_actions    = local.ok_actions
 }
 
-resource "aws_cloudwatch_metric_alarm" "dlq_oldest_age" {
-  count = local.has_dlq ? 1 : 0
+resource "aws_cloudwatch_metric_alarm" "sqs_in_flight" {
+  for_each = local.sqs_main_queues
 
+  alarm_name          = "${local.name_prefix}-sqs-${each.key}-in-flight"
+  alarm_description   = "SQS ${each.key} in-flight(처리 중) 메시지 수 급증"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = local.default_evaluation_periods
+  metric_name         = "ApproximateNumberOfMessagesNotVisible"
+  namespace           = "AWS/SQS"
+  period              = local.default_period
+  statistic           = "Maximum"
+  threshold           = var.sqs_in_flight_threshold
+  treat_missing_data  = "notBreaching"
+
+  dimensions = {
+    QueueName = each.value
+  }
+
+  alarm_actions = local.alarm_actions
+  ok_actions    = local.ok_actions
+}
+
+resource "aws_cloudwatch_metric_alarm" "dlq_oldest_age" {
   alarm_name          = "${local.name_prefix}-dlq-oldest-age"
   alarm_description   = "DLQ 메시지 방치 시간 임계값 초과"
   comparison_operator = "GreaterThanThreshold"

@@ -1,6 +1,4 @@
 resource "aws_cloudwatch_metric_alarm" "rds_cpu" {
-  count = local.has_rds ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-rds-cpu"
   alarm_description   = "RDS CPU 사용률 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -21,8 +19,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_connections" {
-  count = local.has_rds ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-rds-connections"
   alarm_description   = "RDS DB 연결 수 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -43,8 +39,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_connections" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_read_latency" {
-  count = local.has_rds ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-rds-read-latency"
   alarm_description   = "RDS Read Latency 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -65,8 +59,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_read_latency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "rds_write_latency" {
-  count = local.has_rds ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-rds-write-latency"
   alarm_description   = "RDS Write Latency 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -90,8 +82,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_write_latency" {
 # → Aurora PostgreSQL은 pg_log 기반 CloudWatch Logs Insights로 deadlock 감지
 # → 해당 metric alarm 제거, Aurora 전용 replica lag 알람으로 대체
 resource "aws_cloudwatch_metric_alarm" "rds_replica_lag" {
-  count = local.has_rds ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-rds-replica-lag"
   alarm_description   = "Aurora 복제 지연 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -113,8 +103,6 @@ resource "aws_cloudwatch_metric_alarm" "rds_replica_lag" {
 
 # Aurora PostgreSQL의 실제 스토리지 사용량
 resource "aws_cloudwatch_metric_alarm" "rds_volume_bytes_used" {
-  count = local.has_rds ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-rds-volume-bytes-used"
   alarm_description   = "Aurora 스토리지 사용량 임계값 초과"
   comparison_operator = "GreaterThanThreshold"

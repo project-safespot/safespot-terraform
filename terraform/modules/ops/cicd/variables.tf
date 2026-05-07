@@ -1,21 +1,35 @@
 variable "project" {
   type = string
+  default = "safespot"
 }
 
 variable "environment" {
   type = string
+
+  validation {
+    condition     = contains(["dev", "stg", "prod"], var.environment)
+    error_message = "env는 dev, stg, prod 중 하나여야 합니다."
+  }
 }
 
 variable "github_org" {
   type = string
+  default = "project-safespot"
 }
 
 variable "github_repos" {
   type = list(string)
+
+  default = [
+    "safespot-applicaton",
+    "safespot-front"
+  ]
 }
 
 variable "allowed_branches" {
   type = list(string)
+
+  default = [ "main" ]
 }
 
 variable "allow_pull_request_oidc" {
@@ -64,8 +78,10 @@ variable "common_tags" {
 
 variable "frontend_s3_bucket" {
   type = string
+  default = ""
 }
 
 variable "cloudfront_distribution_id" {
   type = string
+  default = ""
 }

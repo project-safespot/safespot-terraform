@@ -1,8 +1,6 @@
 # modules/ops/cloudwatch/metric-alarms-redis.tf
 
 resource "aws_cloudwatch_metric_alarm" "redis_cpu" {
-  count = local.has_redis ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-redis-cpu"
   alarm_description   = "ElastiCache Engine CPU 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -23,8 +21,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "redis_evictions" {
-  count = local.has_redis ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-redis-evictions"
   alarm_description   = "ElastiCache Eviction 발생"
   comparison_operator = "GreaterThanThreshold"
@@ -45,8 +41,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_evictions" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "redis_curr_connections" {
-  count = local.has_redis ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-redis-curr-connections"
   alarm_description   = "ElastiCache 연결 수 임계값 초과"
   comparison_operator = "GreaterThanThreshold"
@@ -67,8 +61,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_curr_connections" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "redis_memory" {
-  count = local.has_redis ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-redis-freeable-memory"
   alarm_description   = "ElastiCache 가용 메모리 부족 (FreeableMemory 임계값 미달)"
   comparison_operator = "LessThanThreshold"
@@ -89,8 +81,6 @@ resource "aws_cloudwatch_metric_alarm" "redis_memory" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "redis_bytes_used" {
-  count = local.has_redis ? 1 : 0
-
   alarm_name          = "${local.name_prefix}-redis-bytes-used"
   alarm_description   = "ElastiCache 캐시 사용 메모리 임계값 초과"
   comparison_operator = "GreaterThanThreshold"

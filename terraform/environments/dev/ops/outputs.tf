@@ -45,3 +45,28 @@ output "irsa_role_arns" {
 output "cloudwatch_read_policy_arn" {
   value = var.enable_observability_iam ? module.observability_iam[0].cloudwatch_read_policy_arn : null
 }
+
+output "log_bucket_id" {
+  description = "S3 로그 버킷 이름."
+  value       = module.log_bucket.bucket_id
+}
+
+output "log_bucket_arn" {
+  description = "S3 로그 버킷 ARN."
+  value       = module.log_bucket.bucket_arn
+}
+
+output "log_bucket_prefixes" {
+  description = "서비스별 S3 prefix 맵."
+  value       = module.log_bucket.prefixes
+}
+
+output "alb_log_prefix" {
+  description = "ALB 접근 로그 설정에 사용할 S3 prefix."
+  value       = module.log_bucket.alb_log_prefix
+}
+
+output "vpc_flow_log_prefix" {
+  description = "VPC Flow 로그 설정에 사용할 S3 prefix."
+  value       = module.log_bucket.vpc_flow_log_prefix
+}

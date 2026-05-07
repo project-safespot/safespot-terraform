@@ -18,7 +18,7 @@ output "terraform_state_policy_arn" {
 }
 
 output "terraform_infra_policy_arn" {
-  value = aws_iam_policy.terraform_infra.arn
+  value = var.enable_terraform_apply ? aws_iam_policy.terraform_infra[0].arn : null
 }
 
 output "argocd_eks_policy_arn" {

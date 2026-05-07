@@ -59,9 +59,21 @@ variable "slack_webhook_recovery_window_days" {
   default = 7
 }
 
+variable "alb_arn_suffix" {
+  description = "ALB ARN suffix. 형식: app/{alb-name}/{id}."
+  type        = string
+}
+
+variable "alb_5xx_elb_threshold" {
+  description = "ALB 자체(ELB 레벨) 5xx 오류 수 임계값"
+  type        = number
+  default     = 0
+}
+
 variable "alb_5xx_threshold" {
-  type    = number
-  default = 5
+  description = "ALB Target(서비스) 5xx 오류 수 임계값"
+  type        = number
+  default     = 0
 }
 
 variable "alb_4xx_threshold" {
@@ -70,8 +82,42 @@ variable "alb_4xx_threshold" {
 }
 
 variable "alb_latency_threshold_seconds" {
+  description = "ALB TargetResponseTime 임계값 (초)"
+  type        = number
+  default     = 1
+}
+
+variable "nat_gateway_id" {
+  description = "NAT Gateway ID."
+  type        = string
+}
+
+variable "natgw_packets_drop_threshold" {
   type    = number
-  default = 2
+  default = 0
+}
+
+variable "natgw_error_port_threshold" {
+  type    = number
+  default = 0
+}
+
+variable "sqs_in_flight_threshold" {
+  description = "SQS in-flight 메시지 수 임계값"
+  type        = number
+  default     = 500
+}
+
+variable "cloudfront_cache_hit_rate_threshold" {
+  description = "CloudFront 캐시 히트율 최소 임계값 (%)"
+  type        = number
+  default     = 70
+}
+
+variable "cloudfront_origin_latency_threshold_ms" {
+  description = "CloudFront Origin 응답시간 임계값 (ms)"
+  type        = number
+  default     = 1000
 }
 
 variable "rds_cpu_threshold" {
@@ -252,6 +298,55 @@ variable "fluentbit_namespace" {
 variable "fluentbit_service_account_name" {
   type    = string
   default = "fluent-bit"
+}
+
+# ── log-bucket ────────────────────────────────────────────────
+
+variable "aws_account_id" {
+  description = "AWS 계정 ID."
+  type        = string
+}
+
+variable "log_bucket_force_destroy" {
+  description = "로그 버킷 삭제 시 오브젝트 자동 제거 여부."
+  type        = bool
+  default     = false
+}
+
+variable "log_bucket_enable_versioning" {
+  description = "로그 버킷 버전 관리 활성화 여부."
+  type        = bool
+  default     = false
+}
+
+variable "alb_log_retention_days" {
+  description = "ALB 로그 보존 기간 (일)."
+  type        = number
+  default     = 90
+}
+
+variable "waf_log_retention_days" {
+  description = "WAF 로그 보존 기간 (일)."
+  type        = number
+  default     = 90
+}
+
+variable "vpc_flow_log_retention_days" {
+  description = "VPC Flow 로그 보존 기간 (일)."
+  type        = number
+  default     = 90
+}
+
+variable "rds_log_retention_days" {
+  description = "RDS 로그 보존 기간 (일)."
+  type        = number
+  default     = 90
+}
+
+variable "cloudwatch_log_retention_days" {
+  description = "CloudWatch 내보내기 로그 보존 기간 (일)."
+  type        = number
+  default     = 365
 }
 
 variable "cloudfront_distribution_id" {
