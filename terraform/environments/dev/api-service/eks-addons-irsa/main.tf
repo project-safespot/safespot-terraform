@@ -68,8 +68,6 @@ module "external_dns_irsa" {
 # ============================================================
 # External Secrets Operator IAM Policy
 # ============================================================
-data "aws_caller_identity" "current" {}
-
 data "aws_iam_policy_document" "external_secrets" {
   statement {
     sid    = "SSMParameterStoreRead"

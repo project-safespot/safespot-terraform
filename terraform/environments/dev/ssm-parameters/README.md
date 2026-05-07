@@ -72,6 +72,7 @@ terraform plan
 
 | Name | Version |
 |------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.100.0 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Modules
@@ -84,6 +85,9 @@ terraform plan
 
 | Name | Type |
 |------|------|
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [terraform_remote_state.api_service_eks_irsa](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.async_worker](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.data](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
 | [terraform_remote_state.eks_core](https://registry.terraform.io/providers/hashicorp/terraform/latest/docs/data-sources/remote_state) | data source |
@@ -103,6 +107,9 @@ terraform plan
 
 | Name | Description |
 |------|-------------|
+| <a name="output_api_core_irsa_role_arn_ssm_parameter_name"></a> [api\_core\_irsa\_role\_arn\_ssm\_parameter\_name](#output\_api\_core\_irsa\_role\_arn\_ssm\_parameter\_name) | SSM parameter name for api-core IRSA role ARN. |
+| <a name="output_api_public_read_irsa_role_arn_ssm_parameter_name"></a> [api\_public\_read\_irsa\_role\_arn\_ssm\_parameter\_name](#output\_api\_public\_read\_irsa\_role\_arn\_ssm\_parameter\_name) | SSM parameter name for api-public-read IRSA role ARN. |
+| <a name="output_external_ingestion_irsa_role_arn_ssm_parameter_name"></a> [external\_ingestion\_irsa\_role\_arn\_ssm\_parameter\_name](#output\_external\_ingestion\_irsa\_role\_arn\_ssm\_parameter\_name) | SSM parameter name for external-ingestion IRSA role ARN. |
 | <a name="output_parameter_arns"></a> [parameter\_arns](#output\_parameter\_arns) | Created non-sensitive SSM String parameter ARNs. |
 | <a name="output_parameter_names"></a> [parameter\_names](#output\_parameter\_names) | Created non-sensitive SSM String parameter names. |
 | <a name="output_secure_parameter_paths"></a> [secure\_parameter\_paths](#output\_secure\_parameter\_paths) | SecureString parameter path contract. Values are managed outside Terraform. |

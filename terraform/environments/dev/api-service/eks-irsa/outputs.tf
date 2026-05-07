@@ -37,3 +37,33 @@ output "alb_controller_service_account_name" {
   description = "Kubernetes ServiceAccount name for AWS Load Balancer Controller."
   value       = var.alb_controller_service_account_name
 }
+
+output "api_core_irsa_role_arn" {
+  description = "IAM role ARN for api-core IRSA."
+  value       = module.api_core_irsa.role_arn
+}
+
+output "api_core_irsa_service_account_subject" {
+  description = "Kubernetes service account subject for api-core IRSA trust policy."
+  value       = module.api_core_irsa.service_account_subject
+}
+
+output "api_public_read_irsa_role_arn" {
+  description = "IAM role ARN for api-public-read IRSA."
+  value       = module.api_public_read_irsa.role_arn
+}
+
+output "api_public_read_irsa_service_account_subject" {
+  description = "Kubernetes service account subject for api-public-read IRSA trust policy."
+  value       = module.api_public_read_irsa.service_account_subject
+}
+
+output "external_ingestion_irsa_role_arn" {
+  description = "IAM role ARN for external-ingestion IRSA."
+  value       = module.external_ingestion_irsa.role_arn
+}
+
+output "external_ingestion_irsa_service_account_subject" {
+  description = "Kubernetes service account subject for external-ingestion IRSA trust policy."
+  value       = module.external_ingestion_irsa.service_account_subject
+}

@@ -27,6 +27,12 @@ variable "eks_core_state_key" {
   default     = "environments/dev/api-service/eks-core/terraform.tfstate"
 }
 
+variable "async_worker_state_key" {
+  description = "S3 object key for async-worker Terraform state."
+  type        = string
+  default     = "environments/dev/async-worker/terraform.tfstate"
+}
+
 variable "alb_controller_namespace" {
   description = "Kubernetes namespace for AWS Load Balancer Controller."
   type        = string
@@ -38,3 +44,28 @@ variable "alb_controller_service_account_name" {
   type        = string
   default     = "aws-load-balancer-controller"
 }
+
+variable "app_namespace" {
+  description = "Kubernetes namespace for application pods."
+  type        = string
+  default     = "application"
+}
+
+variable "api_core_service_account_name" {
+  description = "Kubernetes ServiceAccount name for api-core."
+  type        = string
+  default     = "api-core"
+}
+
+variable "api_public_read_service_account_name" {
+  description = "Kubernetes ServiceAccount name for api-public-read."
+  type        = string
+  default     = "api-public-read"
+}
+
+variable "external_ingestion_service_account_name" {
+  description = "Kubernetes ServiceAccount name for external-ingestion."
+  type        = string
+  default     = "external-ingestion"
+}
+

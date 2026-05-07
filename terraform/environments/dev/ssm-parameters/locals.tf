@@ -148,6 +148,24 @@ locals {
       value       = data.terraform_remote_state.front_edge.outputs.api_origin_domain_name
       description = "API origin domain name."
     }
+
+    api_core_irsa_role_arn = {
+      name        = "/safespot/${var.environment}/api-service/irsa/api-core-role-arn"
+      value       = data.terraform_remote_state.api_service_eks_irsa.outputs.api_core_irsa_role_arn
+      description = "IRSA role ARN for api-core ServiceAccount."
+    }
+
+    api_public_read_irsa_role_arn = {
+      name        = "/safespot/${var.environment}/api-service/irsa/api-public-read-role-arn"
+      value       = data.terraform_remote_state.api_service_eks_irsa.outputs.api_public_read_irsa_role_arn
+      description = "IRSA role ARN for api-public-read ServiceAccount."
+    }
+
+    external_ingestion_irsa_role_arn = {
+      name        = "/safespot/${var.environment}/api-service/irsa/external-ingestion-role-arn"
+      value       = data.terraform_remote_state.api_service_eks_irsa.outputs.external_ingestion_irsa_role_arn
+      description = "IRSA role ARN for external-ingestion ServiceAccount."
+    }
   }
 
   secure_parameter_paths = {

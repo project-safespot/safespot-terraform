@@ -37,3 +37,13 @@ data "terraform_remote_state" "front_edge" {
     region = var.aws_region
   }
 }
+
+data "terraform_remote_state" "api_service_eks_irsa" {
+  backend = "s3"
+
+  config = {
+    bucket = var.terraform_state_bucket
+    key    = "environments/dev/api-service/eks-irsa/terraform.tfstate"
+    region = var.aws_region
+  }
+}
