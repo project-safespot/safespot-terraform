@@ -60,9 +60,9 @@ resource "aws_cloudfront_distribution" "main" {
     }
   }
 
-  # Behavior 1 — 인증 API (캐싱 금지)
+  # Behavior 1 — 핵심 API (인증/관리자 등, 캐싱 금지)
   ordered_cache_behavior {
-    path_pattern             = "/api/auth/*"
+    path_pattern             = "/api/core/*"
     target_origin_id         = "ALB-api"
     viewer_protocol_policy   = "redirect-to-https"
     allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
@@ -71,31 +71,9 @@ resource "aws_cloudfront_distribution" "main" {
     origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" # AllViewer
   }
 
-  # Behavior 2 — 관리자 API (캐싱 금지)
+  # Behavior 2 — 대피소 조회 API (TTL 30초 — 재난시에도 유지)
   ordered_cache_behavior {
-    path_pattern             = "/api/admin/*"
-    target_origin_id         = "ALB-api"
-    viewer_protocol_policy   = "redirect-to-https"
-    allowed_methods          = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
-    cached_methods           = ["GET", "HEAD"]
-    cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # CachingDisabled
-    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" # AllViewer
-  }
-
-  # Behavior 3 — 사용자 정보 API (캐싱 금지)
-  ordered_cache_behavior {
-    path_pattern             = "/api/me"
-    target_origin_id         = "ALB-api"
-    viewer_protocol_policy   = "redirect-to-https"
-    allowed_methods          = ["GET", "HEAD"]
-    cached_methods           = ["GET", "HEAD"]
-    cache_policy_id          = "4135ea2d-6df8-44a3-9df3-4b5a84be39ad" # CachingDisabled
-    origin_request_policy_id = "216adef6-5c7f-47e4-b989-5492eafa07d3" # AllViewer
-  }
-
-  # Behavior 4 — 대피소 조회 API (TTL 30초 — 재난시에도 유지)
-  ordered_cache_behavior {
-    path_pattern           = "/api/shelters/*"
+    path_pattern           = "/api/public/shelters/*"
     target_origin_id       = "ALB-api"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
@@ -103,9 +81,9 @@ resource "aws_cloudfront_distribution" "main" {
     cache_policy_id        = aws_cloudfront_cache_policy.shelters.id
   }
 
-  # Behavior 5 — 재난 정보 API (평상시 TTL 60초)
+  # Behavior 3 — 재난 정보 API (TTL 60초)
   ordered_cache_behavior {
-    path_pattern           = "/api/disaster-alerts"
+    path_pattern           = "/api/public/disaster-alerts*"
     target_origin_id       = "ALB-api"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
@@ -113,9 +91,9 @@ resource "aws_cloudfront_distribution" "main" {
     cache_policy_id        = aws_cloudfront_cache_policy.disaster.id
   }
 
-  # Behavior 6 — 날씨 API (TTL 3600초)
+  # Behavior 4 — 날씨 API (TTL 3600초)
   ordered_cache_behavior {
-    path_pattern           = "/api/weather-alerts"
+    path_pattern           = "/api/public/weather-alerts*"
     target_origin_id       = "ALB-api"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
@@ -123,14 +101,24 @@ resource "aws_cloudfront_distribution" "main" {
     cache_policy_id        = aws_cloudfront_cache_policy.weather.id
   }
 
-  # Behavior 7 — 대기질 API (TTL 3600초)
+  # Behavior 5 — 대기질 API (TTL 3600초)
   ordered_cache_behavior {
-    path_pattern           = "/api/air-quality"
+    path_pattern           = "/api/public/air-quality*"
     target_origin_id       = "ALB-api"
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
     cache_policy_id        = aws_cloudfront_cache_policy.air.id
+  }
+
+  # Behavior 6 — 기타 공개 API 캐싱 (TTL 60초 기본)
+  ordered_cache_behavior {
+    path_pattern           = "/api/public/*"
+    target_origin_id       = "ALB-api"
+    viewer_protocol_policy = "redirect-to-https"
+    allowed_methods        = ["GET", "HEAD"]
+    cached_methods         = ["GET", "HEAD"]
+    cache_policy_id        = aws_cloudfront_cache_policy.public_default.id
   }
 
   # Default Behavior — S3 정적 파일
@@ -177,7 +165,7 @@ resource "aws_cloudfront_cache_policy" "shelters" {
   }
 }
 
-# Cache Policy — 재난 (평상시 TTL 60초)
+# Cache Policy — 재난 (TTL 60초)
 resource "aws_cloudfront_cache_policy" "disaster" {
   name        = "${var.project}-${var.environment}-disaster"
   default_ttl = 60
@@ -219,6 +207,24 @@ resource "aws_cloudfront_cache_policy" "air" {
   default_ttl = 3600
   min_ttl     = 60
   max_ttl     = 7200
+
+  parameters_in_cache_key_and_forwarded_to_origin {
+    cookies_config { cookie_behavior = "none" }
+    headers_config { header_behavior = "none" }
+    query_strings_config {
+      query_string_behavior = "all"
+    }
+    enable_accept_encoding_gzip   = true
+    enable_accept_encoding_brotli = true
+  }
+}
+
+# Cache Policy — 기타 공개 API 기본값 (TTL 60초)
+resource "aws_cloudfront_cache_policy" "public_default" {
+  name        = "${var.project}-${var.environment}-public-default"
+  default_ttl = 60
+  min_ttl     = 0
+  max_ttl     = 120
 
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config { cookie_behavior = "none" }
