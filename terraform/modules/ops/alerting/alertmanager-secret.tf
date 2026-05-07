@@ -1,19 +1,12 @@
-resource "aws_ssm_parameter" "slack_webhook" {
-  count = var.enable_slack_secret ? 1 : 0
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
-  name        = local.slack_secret_name
-  description = "AlertManager Slack Webhook URL for ${local.name_prefix}"
-  type        = "SecureString"
-  value       = var.slack_webhook_url != "" ? var.slack_webhook_url : "placeholder"
-
-  tags = {
-    Name        = local.slack_secret_name
-    Project     = var.project
-    Environment = var.environment
-    Domain      = local.domain
-    ManagedBy   = "terraform"
-  }
-}
+# Slack Webhook URL은 Terraform으로 관리하지 않습니다.
+# 아래 이름으로 SSM Parameter Store에 직접 입력하세요 (Type: SecureString).
+# aws ssm put-parameter \
+#   --name "$(terraform output -raw slack_webhook_secret_name)" \
+#   --value "https://hooks.slack.com/services/..." \
+#   --type "SecureString"
 
 resource "aws_iam_policy" "alertmanager_secret_read" {
   count = var.enable_slack_secret ? 1 : 0
@@ -31,7 +24,7 @@ resource "aws_iam_policy" "alertmanager_secret_read" {
           "ssm:GetParameters",
           "ssm:DescribeParameters"
         ]
-        Resource = aws_ssm_parameter.slack_webhook[0].arn
+        Resource = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${local.slack_secret_name}"
       }
     ]
   })

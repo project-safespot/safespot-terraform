@@ -98,6 +98,8 @@ locals {
     ? var.waf_acl_name
     : data.terraform_remote_state.front_edge.outputs.waf_acl_name
   )
+
+  nat_gateway_id = data.terraform_remote_state.network.outputs.nat_gateway_id
 }
 
 module "log_bucket" {
@@ -162,7 +164,7 @@ module "cloudwatch" {
   alb_4xx_threshold     = var.alb_4xx_threshold
   alb_latency_threshold = var.alb_latency_threshold_seconds
 
-  nat_gateway_id               = var.nat_gateway_id
+  nat_gateway_id               = local.nat_gateway_id
   natgw_packets_drop_threshold = var.natgw_packets_drop_threshold
   natgw_error_port_threshold   = var.natgw_error_port_threshold
 

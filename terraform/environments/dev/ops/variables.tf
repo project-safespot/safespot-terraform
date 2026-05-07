@@ -95,10 +95,6 @@ variable "alb_latency_threshold_seconds" {
   default     = 1
 }
 
-variable "nat_gateway_id" {
-  description = "NAT Gateway ID."
-  type        = string
-}
 
 variable "natgw_packets_drop_threshold" {
   type    = number

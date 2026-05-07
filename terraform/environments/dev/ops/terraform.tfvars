@@ -15,8 +15,7 @@ log_retention_days = 30
 
 # TODO: 아래 네 값을 실제 인프라 값으로 교체한 후 apply
 alert_email    = "201sohyun@naver.com"
-alb_arn_suffix = "app/safespot-dev-alb/xxxxxxxxxxxx"
-nat_gateway_id = "nat-xxxxxxxxxxxxxxxxx"
+alb_arn_suffix = "app/k8s-safespotdevapi-00c466700d/e7b7aa08dfee8e6e"
 aws_account_id = "123456789012"
 
 enable_observability_iam = false
