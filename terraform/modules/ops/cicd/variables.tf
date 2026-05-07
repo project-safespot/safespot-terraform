@@ -1,5 +1,5 @@
 variable "project" {
-  type = string
+  type    = string
   default = "safespot"
 }
 
@@ -13,7 +13,7 @@ variable "environment" {
 }
 
 variable "github_org" {
-  type = string
+  type    = string
   default = "project-safespot"
 }
 
@@ -29,7 +29,7 @@ variable "github_repos" {
 variable "allowed_branches" {
   type = list(string)
 
-  default = [ "main" ]
+  default = ["main"]
 }
 
 variable "allow_pull_request_oidc" {
@@ -55,15 +55,6 @@ variable "enable_terraform_apply" {
   default = false
 }
 
-variable "enable_argocd_eks_policy" {
-  type    = bool
-  default = false
-}
-
-variable "eks_cluster_name" {
-  type    = string
-  default = ""
-}
 
 variable "aws_region" {
   type = string
@@ -78,12 +69,12 @@ variable "common_tags" {
 }
 
 variable "frontend_s3_bucket" {
-  type = string
+  type    = string
   default = ""
 }
 
 variable "cloudfront_distribution_id" {
-  type = string
+  type    = string
   default = ""
 }
 

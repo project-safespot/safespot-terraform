@@ -47,8 +47,3 @@ output "lambda_sg_id" {
   description = "Lambda Security Group ID"
   value       = module.sg.lambda_sg_id
 }
-
-output "nat_gateway_id" {
-  description = "NAT Gateway ID"
-  value       = module.vpc.nat_gateway_id
-}

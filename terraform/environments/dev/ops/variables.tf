@@ -96,6 +96,12 @@ variable "alb_latency_threshold_seconds" {
 }
 
 
+variable "nat_gateway_id" {
+  description = "NAT Gateway ID. 비어 있으면 NAT GW 알람을 생성하지 않습니다."
+  type        = string
+  default     = ""
+}
+
 variable "natgw_packets_drop_threshold" {
   type    = number
   default = 0
@@ -305,11 +311,6 @@ variable "fluentbit_service_account_name" {
 }
 
 # ── log-bucket ────────────────────────────────────────────────
-
-variable "aws_account_id" {
-  description = "AWS 계정 ID."
-  type        = string
-}
 
 variable "log_bucket_force_destroy" {
   description = "로그 버킷 삭제 시 오브젝트 자동 제거 여부."

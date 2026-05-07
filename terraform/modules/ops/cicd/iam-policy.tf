@@ -161,7 +161,7 @@ resource "aws_iam_policy" "terraform_infra" {
           "arn:aws:iam::${local.account_id}:oidc-provider/token.actions.githubusercontent.com"
         ]
       },
-        {
+      {
         Sid    = "AllowSSMParameterStore"
         Effect = "Allow"
         Action = [
@@ -175,7 +175,7 @@ resource "aws_iam_policy" "terraform_infra" {
           "ssm:RemoveTagsFromResource"
         ]
         Resource = [
-          "arn:aws:ssm:*:${local.account_id}:parameter/${var.project}/*"
+          "arn:aws:ssm:*:${local.account_id}:parameter/${var.project}/${var.environment}/*"
         ]
       },
       {
@@ -237,7 +237,7 @@ resource "aws_iam_role_policy_attachment" "terraform_infra" {
 
 resource "aws_iam_policy" "frontend_deploy" {
   count = var.frontend_s3_bucket != "" ? 1 : 0
-  name = "${local.name_prefix}-iam-policy-frontend-deploy"
+  name  = "${local.name_prefix}-iam-policy-frontend-deploy"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -249,9 +249,9 @@ resource "aws_iam_policy" "frontend_deploy" {
         Resource = "arn:aws:s3:::${var.frontend_s3_bucket}"
       },
       {
-        Sid    = "S3FrontendObjectDeploy"
-        Effect = "Allow"
-        Action = ["s3:PutObject", "s3:DeleteObject"]
+        Sid      = "S3FrontendObjectDeploy"
+        Effect   = "Allow"
+        Action   = ["s3:PutObject", "s3:DeleteObject"]
         Resource = "arn:aws:s3:::${var.frontend_s3_bucket}/*"
       },
       {

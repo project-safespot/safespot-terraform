@@ -192,7 +192,7 @@ data "aws_iam_policy_document" "log" {
       identifiers = ["logs.${data.aws_region.current.name}.amazonaws.com"]
     }
 
-    actions   = ["s3:PutObject", "s3:GetBucketAcl"]
+    actions = ["s3:PutObject", "s3:GetBucketAcl"]
     resources = [
       "${aws_s3_bucket.log.arn}/${local.prefixes.rds}/*",
       aws_s3_bucket.log.arn,
@@ -215,7 +215,7 @@ data "aws_iam_policy_document" "log" {
       identifiers = ["logs.${data.aws_region.current.name}.amazonaws.com"]
     }
 
-    actions   = ["s3:PutObject", "s3:GetBucketAcl"]
+    actions = ["s3:PutObject", "s3:GetBucketAcl"]
     resources = [
       "${aws_s3_bucket.log.arn}/${local.prefixes.cloudwatch}/*",
       aws_s3_bucket.log.arn,

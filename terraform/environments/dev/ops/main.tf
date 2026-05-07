@@ -6,6 +6,8 @@
 #
 # [변경] try() 전부 제거
 
+data "aws_caller_identity" "current" {}
+
 data "terraform_remote_state" "network" {
   backend = "s3"
 
@@ -98,8 +100,6 @@ locals {
     ? var.waf_acl_name
     : data.terraform_remote_state.front_edge.outputs.waf_acl_name
   )
-
-  nat_gateway_id = data.terraform_remote_state.network.outputs.nat_gateway_id
 }
 
 module "log_bucket" {
@@ -107,7 +107,7 @@ module "log_bucket" {
 
   project        = var.project
   environment    = var.environment
-  aws_account_id = var.aws_account_id
+  aws_account_id = data.aws_caller_identity.current.account_id
   force_destroy  = var.log_bucket_force_destroy
 
   alb_retention_days        = var.alb_log_retention_days
@@ -164,7 +164,7 @@ module "cloudwatch" {
   alb_4xx_threshold     = var.alb_4xx_threshold
   alb_latency_threshold = var.alb_latency_threshold_seconds
 
-  nat_gateway_id               = local.nat_gateway_id
+  nat_gateway_id               = var.nat_gateway_id
   natgw_packets_drop_threshold = var.natgw_packets_drop_threshold
   natgw_error_port_threshold   = var.natgw_error_port_threshold
 

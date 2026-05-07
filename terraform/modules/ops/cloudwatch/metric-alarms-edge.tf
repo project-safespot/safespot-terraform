@@ -100,7 +100,7 @@ resource "aws_cloudwatch_metric_alarm" "cloudfront_origin_latency" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "waf_blocked_requests" {
-  provider = aws.us_east_1
+  provider            = aws.us_east_1
   alarm_name          = "${local.name_prefix}-waf-blocked-requests"
   alarm_description   = "WAF BlockedRequests 임계값 초과"
   comparison_operator = "GreaterThanThreshold"

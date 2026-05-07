@@ -76,10 +76,10 @@ output "all_log_group_arns" {
     }),
     [aws_cloudwatch_log_group.eks_control_plane.arn],
     var.lambda_function_name != null && trimspace(var.lambda_function_name) != ""
-      ? [aws_cloudwatch_log_group.lambda[0].arn]
-      : [],
+    ? [aws_cloudwatch_log_group.lambda[0].arn]
+    : [],
     var.enable_alb_log_group
-      ? [aws_cloudwatch_log_group.alb_access_log[0].arn]
-      : []
+    ? [aws_cloudwatch_log_group.alb_access_log[0].arn]
+    : []
   )
 }

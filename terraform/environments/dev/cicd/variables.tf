@@ -76,15 +76,6 @@ variable "enable_terraform_apply" {
   default = false
 }
 
-variable "enable_argocd_eks_policy" {
-  type    = bool
-  default = false
-}
-
-variable "cluster_name" {
-  type    = string
-  default = ""
-}
 
 variable "common_tags" {
   type    = map(string)

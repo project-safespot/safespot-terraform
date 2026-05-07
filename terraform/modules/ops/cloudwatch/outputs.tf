@@ -58,10 +58,10 @@ output "alarm_arns" {
     },
 
     {
-      cloudfront_5xx              = aws_cloudwatch_metric_alarm.cloudfront_5xx.arn
-      cloudfront_4xx              = aws_cloudwatch_metric_alarm.cloudfront_4xx.arn
-      cloudfront_cache_hit_rate   = aws_cloudwatch_metric_alarm.cloudfront_cache_hit_rate.arn
-      cloudfront_origin_latency   = aws_cloudwatch_metric_alarm.cloudfront_origin_latency.arn
+      cloudfront_5xx            = aws_cloudwatch_metric_alarm.cloudfront_5xx.arn
+      cloudfront_4xx            = aws_cloudwatch_metric_alarm.cloudfront_4xx.arn
+      cloudfront_cache_hit_rate = aws_cloudwatch_metric_alarm.cloudfront_cache_hit_rate.arn
+      cloudfront_origin_latency = aws_cloudwatch_metric_alarm.cloudfront_origin_latency.arn
     },
 
     {

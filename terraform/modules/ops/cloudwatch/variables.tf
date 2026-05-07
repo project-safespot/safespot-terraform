@@ -287,13 +287,9 @@ variable "redis_bytes_used_threshold_bytes" {
 }
 
 variable "nat_gateway_id" {
-  description = "NAT Gateway ID"
+  description = "NAT Gateway ID. 비어 있으면 NAT GW 알람을 생성하지 않습니다."
   type        = string
-
-  validation {
-    condition     = length(trimspace(var.nat_gateway_id)) > 0
-    error_message = "nat_gateway_id는 반드시 설정해야 합니다."
-  }
+  default     = ""
 }
 
 variable "natgw_packets_drop_threshold" {

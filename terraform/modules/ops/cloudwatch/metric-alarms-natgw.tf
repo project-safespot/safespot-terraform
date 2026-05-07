@@ -5,6 +5,8 @@
 # Subnet 잔여 IP 모니터링이 필요하면 Lambda + EventBridge로 커스텀 메트릭을 발행해야 한다.
 
 resource "aws_cloudwatch_metric_alarm" "natgw_packets_drop" {
+  count = var.nat_gateway_id != "" ? 1 : 0
+
   alarm_name          = "${local.name_prefix}-natgw-packets-drop"
   alarm_description   = "NAT Gateway 패킷 드롭 발생"
   comparison_operator = "GreaterThanThreshold"
@@ -25,6 +27,8 @@ resource "aws_cloudwatch_metric_alarm" "natgw_packets_drop" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "natgw_error_port_allocation" {
+  count = var.nat_gateway_id != "" ? 1 : 0
+
   alarm_name          = "${local.name_prefix}-natgw-error-port-allocation"
   alarm_description   = "NAT Gateway 포트 할당 실패 발생"
   comparison_operator = "GreaterThanThreshold"
