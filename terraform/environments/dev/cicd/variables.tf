@@ -1,54 +1,53 @@
-variable "aws_region" {
-  type    = string
-  default = "ap-northeast-2"
-}
-
 variable "project" {
-  type    = string
-  default = "safespot"
+  type = string
 }
 
 variable "environment" {
-  type    = string
-  default = "dev"
+  type = string
 }
 
 variable "github_org" {
-  type    = string
-  default = "project-safespot"
+  type = string
 }
 
 variable "github_repos" {
   type = list(string)
-
-  default = [
-    "safespot-terraform",
-    "safespot-application"
-  ]
 }
 
 variable "allowed_branches" {
   type = list(string)
+
+  default = [
+    "main",
+    "infra/ops-cicd"
+  ]
+}
+
+variable "allow_pull_request_oidc" {
+  type    = bool
+  default = false
 }
 
 variable "terraform_state_bucket" {
-  type    = string
-  default = "safespot-terraform-state"
+  type = string
+}
+
+variable "terraform_state_key_prefixes" {
+  type = list(string)
 }
 
 variable "ecr_repository_arns" {
-  type    = list(string)
-  default = []
+  type = list(string)
 }
 
 variable "enable_terraform_apply" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "enable_argocd_eks_policy" {
   type    = bool
-  default = true
+  default = false
 }
 
 variable "eks_cluster_name" {
@@ -56,19 +55,14 @@ variable "eks_cluster_name" {
   default = ""
 }
 
-variable "allow_pull_request_oidc" {
-  type = bool
+variable "aws_region" {
+  type = string
+}
+
+variable "account_id" {
+  type = string
 }
 
 variable "common_tags" {
   type = map(string)
-
-  default = {
-    Project     = "safespot"
-    Environment = "dev"
-    Domain      = "ops"
-    ManagedBy   = "terraform"
-    Service     = "safespot"
-    CostCenter  = "safespot-dev"
-  }
 }
