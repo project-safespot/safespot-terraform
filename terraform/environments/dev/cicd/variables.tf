@@ -66,9 +66,9 @@ variable "terraform_state_key_prefixes" {
 }
 
 variable "ecr_repository_arns" {
-  description = "비워두면 ops remote state에서 자동으로 읽음"
-  type        = list(string)
-  default     = []
+  description = "비워두면 ops remote state에서 자동으로 읽음. 서비스명 → ARN map."
+  type        = map(string)
+  default     = {}
 }
 
 variable "enable_terraform_apply" {

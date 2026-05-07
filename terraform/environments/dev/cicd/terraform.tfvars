@@ -31,3 +31,6 @@ frontend_deploy_repos = [
 ]
 
 terraform_state_bucket = "safespot-terraform-state"
+
+frontend_s3_bucket         = "safespot-dev-frontend"
+cloudfront_distribution_id = "E2PBOVHQ83HLN1"

@@ -19,7 +19,7 @@ alb_arn_suffix = "app/safespot-dev-alb/xxxxxxxxxxxx"
 nat_gateway_id = "nat-xxxxxxxxxxxxxxxxx"
 aws_account_id = "123456789012"
 
-enable_observability_iam = true
+enable_observability_iam = false
 # 아래 세 플래그는 실제 ServiceAccount annotation 적용(Helm values/ArgoCD app) 확정 후 활성화
 enable_fluentbit_irsa  = false
 enable_prometheus_irsa = false

@@ -23,6 +23,25 @@ data "terraform_remote_state" "api_service" {
   }
 }
 
+locals {
+  # ops remote state ecr_repository_arns는 map(string) 타입 (서비스명 → ARN)
+  ecr_repository_arns = (
+    length(var.ecr_repository_arns) > 0
+    ? var.ecr_repository_arns
+    : data.terraform_remote_state.ops.outputs.ecr_repository_arns
+  )
+
+  cluster_name = (
+    var.enable_argocd_eks_policy
+    ? (
+      var.cluster_name != ""
+      ? var.cluster_name
+      : data.terraform_remote_state.api_service[0].outputs.cluster_name
+    )
+    : ""
+  )
+}
+
 module "cicd" {
   source = "../../../modules/ops/cicd"
 

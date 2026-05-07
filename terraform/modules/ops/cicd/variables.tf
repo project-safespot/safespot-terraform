@@ -46,7 +46,8 @@ variable "terraform_state_key_prefixes" {
 }
 
 variable "ecr_repository_arns" {
-  type = list(string)
+  description = "ECR repository ARN map. 서비스명 → ARN 형태. ops remote state ecr_repository_arns output과 동일한 구조."
+  type        = map(string)
 }
 
 variable "enable_terraform_apply" {

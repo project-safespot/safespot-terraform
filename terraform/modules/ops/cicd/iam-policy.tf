@@ -25,7 +25,7 @@ resource "aws_iam_policy" "ecr_push" {
           "ecr:BatchGetImage",
           "ecr:GetDownloadUrlForLayer"
         ]
-        Resource = var.ecr_repository_arns
+        Resource = values(var.ecr_repository_arns)
       }
     ]
   })
@@ -205,13 +205,6 @@ resource "aws_iam_policy" "terraform_infra" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "argocd_eks" {
-  for_each = var.enable_argocd_eks_policy ? aws_iam_role.github_actions : {}
-
-  role       = each.value.name
-  policy_arn = aws_iam_policy.argocd_eks[0].arn
-}
-
 # ECR push: application/container build repo만
 resource "aws_iam_role_policy_attachment" "ecr_push" {
   for_each = toset([
@@ -250,21 +243,19 @@ resource "aws_iam_policy" "frontend_deploy" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid    = "AllowS3FrontendSync"
-        Effect = "Allow"
-        Action = [
-          "s3:PutObject",
-          "s3:GetObject",
-          "s3:DeleteObject",
-          "s3:ListBucket"
-        ]
-        Resource = [
-          "arn:aws:s3:::${var.frontend_s3_bucket}",
-          "arn:aws:s3:::${var.frontend_s3_bucket}/*"
-        ]
+        Sid      = "S3FrontendDeploy"
+        Effect   = "Allow"
+        Action   = ["s3:ListBucket"]
+        Resource = "arn:aws:s3:::${var.frontend_s3_bucket}"
       },
       {
-        Sid      = "AllowCloudfrontInvalidation"
+        Sid    = "S3FrontendObjectDeploy"
+        Effect = "Allow"
+        Action = ["s3:PutObject", "s3:DeleteObject"]
+        Resource = "arn:aws:s3:::${var.frontend_s3_bucket}/*"
+      },
+      {
+        Sid      = "CloudFrontInvalidation"
         Effect   = "Allow"
         Action   = "cloudfront:CreateInvalidation"
         Resource = "arn:aws:cloudfront::${local.account_id}:distribution/${var.cloudfront_distribution_id}"
