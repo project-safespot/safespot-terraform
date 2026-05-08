@@ -68,9 +68,9 @@ output "alarm_arns" {
       waf_blocked_requests = aws_cloudwatch_metric_alarm.waf_blocked_requests.arn
     },
 
-    {
-      natgw_packets_drop          = aws_cloudwatch_metric_alarm.natgw_packets_drop.arn
-      natgw_error_port_allocation = aws_cloudwatch_metric_alarm.natgw_error_port_allocation.arn
-    }
+    var.nat_gateway_id != "" ? {
+      natgw_packets_drop          = aws_cloudwatch_metric_alarm.natgw_packets_drop[0].arn
+      natgw_error_port_allocation = aws_cloudwatch_metric_alarm.natgw_error_port_allocation[0].arn
+    } : {}
   )
 }

@@ -33,7 +33,7 @@ resource "aws_iam_policy" "alertmanager_secret_read" {
           "ssm:GetParameters",
           "ssm:DescribeParameters"
         ]
-        Resource = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter/${local.slack_secret_name}"
+        Resource = aws_ssm_parameter.slack_webhook[0].arn
       }
     ]
   })

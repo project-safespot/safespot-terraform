@@ -79,9 +79,14 @@ variable "cloudfront_distribution_id" {
 }
 
 variable "ssm_kms_key_arn" {
-  description = "KMS key ARN for SSM SecureString. 기본값 '*'은 dev 전용 — 프로덕션에서는 반드시 특정 ARN 지정."
+  description = "KMS key ARN for SSM SecureString. 비워두면 KMS 권한 statement를 생성하지 않습니다."
   type        = string
-  default     = "*"
+  default     = ""
+
+  validation {
+    condition     = var.ssm_kms_key_arn != "*"
+    error_message = "ssm_kms_key_arn에는 wildcard(*)를 사용할 수 없습니다. 비워두거나 특정 KMS key ARN을 지정하세요."
+  }
 }
 
 variable "ecr_push_repos" {

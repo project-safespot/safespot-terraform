@@ -74,128 +74,134 @@ resource "aws_iam_policy" "terraform_infra" {
 
   policy = jsonencode({
     Version = "2012-10-17"
-    Statement = [
-      {
-        Sid    = "AllowCloudWatch"
-        Effect = "Allow"
-        Action = [
-          "cloudwatch:*Alarm*",
-          "cloudwatch:*Dashboard*",
-          "cloudwatch:ListMetrics",
-          "cloudwatch:GetMetricData",
-          "logs:CreateLogGroup",
-          "logs:DeleteLogGroup",
-          "logs:PutRetentionPolicy",
-          "logs:DescribeLogGroups",
-          "logs:TagLogGroup",
-          "logs:UntagLogGroup"
-        ]
-        Resource = "*"
-      },
-      {
-        Sid    = "AllowSNS"
-        Effect = "Allow"
-        Action = [
-          "sns:CreateTopic",
-          "sns:DeleteTopic",
-          "sns:GetTopicAttributes",
-          "sns:SetTopicAttributes",
-          "sns:Subscribe",
-          "sns:Unsubscribe",
-          "sns:ListSubscriptionsByTopic",
-          "sns:TagResource",
-          "sns:UntagResource"
-        ]
-        Resource = "arn:aws:sns:*:${local.account_id}:${local.name_prefix}-sns-*"
-      },
-      {
-        Sid    = "AllowECRManage"
-        Effect = "Allow"
-        Action = [
-          "ecr:CreateRepository",
-          "ecr:DeleteRepository",
-          "ecr:DescribeRepositories",
-          "ecr:PutLifecyclePolicy",
-          "ecr:GetLifecyclePolicy",
-          "ecr:DeleteLifecyclePolicy",
-          "ecr:PutImageTagMutability",
-          "ecr:PutImageScanningConfiguration",
-          "ecr:TagResource",
-          "ecr:UntagResource",
-          "ecr:ListTagsForResource"
-        ]
-        Resource = "arn:aws:ecr:*:${local.account_id}:repository/${var.project}-${var.environment}-${local.domain}-ecr-*"
-      },
-      {
-        Sid    = "AllowIAM"
-        Effect = "Allow"
-        Action = [
-          "iam:CreateRole",
-          "iam:DeleteRole",
-          "iam:GetRole",
-          "iam:UpdateAssumeRolePolicy",
-          "iam:AttachRolePolicy",
-          "iam:DetachRolePolicy",
-          "iam:CreatePolicy",
-          "iam:DeletePolicy",
-          "iam:GetPolicy",
-          "iam:GetPolicyVersion",
-          "iam:CreatePolicyVersion",
-          "iam:DeletePolicyVersion",
-          "iam:ListPolicyVersions",
-          "iam:ListAttachedRolePolicies",
-          "iam:TagRole",
-          "iam:UntagRole",
-          "iam:TagPolicy",
-          "iam:UntagPolicy",
-          "iam:CreateOpenIDConnectProvider",
-          "iam:DeleteOpenIDConnectProvider",
-          "iam:GetOpenIDConnectProvider",
-          "iam:UpdateOpenIDConnectProviderThumbprint",
-          "iam:TagOpenIDConnectProvider",
-          "iam:UntagOpenIDConnectProvider"
-        ]
-        Resource = [
-          "arn:aws:iam::${local.account_id}:role/${local.name_prefix}-iam-role-*",
-          "arn:aws:iam::${local.account_id}:policy/${local.name_prefix}-iam-policy-*",
-          "arn:aws:iam::${local.account_id}:oidc-provider/token.actions.githubusercontent.com"
-        ]
-      },
-      {
-        Sid    = "AllowSSMParameterStore"
-        Effect = "Allow"
-        Action = [
-          "ssm:PutParameter",
-          "ssm:GetParameter",
-          "ssm:GetParameters",
-          "ssm:GetParametersByPath",
-          "ssm:DeleteParameter",
-          "ssm:DescribeParameters",
-          "ssm:AddTagsToResource",
-          "ssm:RemoveTagsFromResource"
-        ]
-        Resource = [
-          "arn:aws:ssm:*:${local.account_id}:parameter/${var.project}/${var.environment}/*"
-        ]
-      },
-      {
-        Sid    = "AllowKMSForSecureString"
-        Effect = "Allow"
-        Action = [
-          "kms:Decrypt",
-          "kms:Encrypt",
-          "kms:GenerateDataKey",
-          "kms:DescribeKey"
-        ]
-        Resource = var.ssm_kms_key_arn
-      },
-      {
-        Sid      = "AllowSTSGetCallerIdentity"
-        Effect   = "Allow"
-        Action   = "sts:GetCallerIdentity"
-        Resource = "*"
-      }
-    ]
+    Statement = concat(
+      [
+        {
+          Sid    = "AllowCloudWatch"
+          Effect = "Allow"
+          Action = [
+            "cloudwatch:*Alarm*",
+            "cloudwatch:*Dashboard*",
+            "cloudwatch:ListMetrics",
+            "cloudwatch:GetMetricData",
+            "logs:CreateLogGroup",
+            "logs:DeleteLogGroup",
+            "logs:PutRetentionPolicy",
+            "logs:DescribeLogGroups",
+            "logs:TagLogGroup",
+            "logs:UntagLogGroup"
+          ]
+          Resource = "*"
+        },
+        {
+          Sid    = "AllowSNS"
+          Effect = "Allow"
+          Action = [
+            "sns:CreateTopic",
+            "sns:DeleteTopic",
+            "sns:GetTopicAttributes",
+            "sns:SetTopicAttributes",
+            "sns:Subscribe",
+            "sns:Unsubscribe",
+            "sns:ListSubscriptionsByTopic",
+            "sns:TagResource",
+            "sns:UntagResource"
+          ]
+          Resource = "arn:aws:sns:*:${local.account_id}:${local.name_prefix}-sns-*"
+        },
+        {
+          Sid    = "AllowECRManage"
+          Effect = "Allow"
+          Action = [
+            "ecr:CreateRepository",
+            "ecr:DeleteRepository",
+            "ecr:DescribeRepositories",
+            "ecr:PutLifecyclePolicy",
+            "ecr:GetLifecyclePolicy",
+            "ecr:DeleteLifecyclePolicy",
+            "ecr:PutImageTagMutability",
+            "ecr:PutImageScanningConfiguration",
+            "ecr:TagResource",
+            "ecr:UntagResource",
+            "ecr:ListTagsForResource"
+          ]
+          Resource = "arn:aws:ecr:*:${local.account_id}:repository/${var.project}-${var.environment}-${local.domain}-ecr-*"
+        },
+        {
+          Sid    = "AllowIAM"
+          Effect = "Allow"
+          Action = [
+            "iam:CreateRole",
+            "iam:DeleteRole",
+            "iam:GetRole",
+            "iam:UpdateAssumeRolePolicy",
+            "iam:AttachRolePolicy",
+            "iam:DetachRolePolicy",
+            "iam:CreatePolicy",
+            "iam:DeletePolicy",
+            "iam:GetPolicy",
+            "iam:GetPolicyVersion",
+            "iam:CreatePolicyVersion",
+            "iam:DeletePolicyVersion",
+            "iam:ListPolicyVersions",
+            "iam:ListAttachedRolePolicies",
+            "iam:TagRole",
+            "iam:UntagRole",
+            "iam:TagPolicy",
+            "iam:UntagPolicy",
+            "iam:CreateOpenIDConnectProvider",
+            "iam:DeleteOpenIDConnectProvider",
+            "iam:GetOpenIDConnectProvider",
+            "iam:UpdateOpenIDConnectProviderThumbprint",
+            "iam:TagOpenIDConnectProvider",
+            "iam:UntagOpenIDConnectProvider"
+          ]
+          Resource = [
+            "arn:aws:iam::${local.account_id}:role/${local.name_prefix}-iam-role-*",
+            "arn:aws:iam::${local.account_id}:policy/${local.name_prefix}-iam-policy-*",
+            "arn:aws:iam::${local.account_id}:oidc-provider/token.actions.githubusercontent.com"
+          ]
+        },
+        {
+          Sid    = "AllowSSMParameterStore"
+          Effect = "Allow"
+          Action = [
+            "ssm:PutParameter",
+            "ssm:GetParameter",
+            "ssm:GetParameters",
+            "ssm:GetParametersByPath",
+            "ssm:DeleteParameter",
+            "ssm:DescribeParameters",
+            "ssm:AddTagsToResource",
+            "ssm:RemoveTagsFromResource"
+          ]
+          Resource = [
+            "arn:aws:ssm:*:${local.account_id}:parameter/${var.project}/${var.environment}/*"
+          ]
+        }
+      ],
+      var.ssm_kms_key_arn != "" ? [
+        {
+          Sid    = "AllowKMSForSecureString"
+          Effect = "Allow"
+          Action = [
+            "kms:Decrypt",
+            "kms:Encrypt",
+            "kms:GenerateDataKey",
+            "kms:DescribeKey"
+          ]
+          Resource = var.ssm_kms_key_arn
+        }
+      ] : [],
+      [
+        {
+          Sid      = "AllowSTSGetCallerIdentity"
+          Effect   = "Allow"
+          Action   = "sts:GetCallerIdentity"
+          Resource = "*"
+        }
+      ]
+    )
   })
 
 

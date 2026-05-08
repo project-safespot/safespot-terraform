@@ -17,7 +17,6 @@ github_repos = [
 # ECR push 권한을 받을 repo (application/container build repo만)
 ecr_push_repos = [
   "safespot-application",
-  "safespot-front",
 ]
 
 # Terraform state 읽기/쓰기 권한을 받을 repo
