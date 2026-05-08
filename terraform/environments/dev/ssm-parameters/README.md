@@ -98,6 +98,8 @@ terraform plan
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_alb_arn_suffix"></a> [alb\_arn\_suffix](#input\_alb\_arn\_suffix) | ALB ARN suffix for CloudWatch metrics (e.g. app/safespot-dev-alb/<id>). Set after AWS Load Balancer Controller creates the ALB. | `string` | `""` | no |
+| <a name="input_api_target_group_arn_suffix"></a> [api\_target\_group\_arn\_suffix](#input\_api\_target\_group\_arn\_suffix) | API TargetGroup ARN suffix for CloudWatch metrics (e.g. targetgroup/<tg-name>/<id>). Set after the target group is created. | `string` | `""` | no |
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region. | `string` | n/a | yes |
 | <a name="input_common_tags"></a> [common\_tags](#input\_common\_tags) | Common tags for resources. | `map(string)` | `{}` | no |
 | <a name="input_environment"></a> [environment](#input\_environment) | Environment name. | `string` | n/a | yes |

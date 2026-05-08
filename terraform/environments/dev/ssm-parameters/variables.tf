@@ -23,3 +23,15 @@ variable "common_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "alb_arn_suffix" {
+  description = "ALB ARN suffix for CloudWatch metrics (e.g. app/safespot-dev-alb/<id>). Set after AWS Load Balancer Controller creates the ALB."
+  type        = string
+  default     = ""
+}
+
+variable "api_target_group_arn_suffix" {
+  description = "API TargetGroup ARN suffix for CloudWatch metrics (e.g. targetgroup/<tg-name>/<id>). Set after the target group is created."
+  type        = string
+  default     = ""
+}

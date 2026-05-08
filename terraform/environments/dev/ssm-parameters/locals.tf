@@ -95,6 +95,54 @@ locals {
       description = "Async worker environment cache refresh queue URL."
     }
 
+    cache_refresh_dlq_url = {
+      name        = "/safespot/${var.environment}/async-worker/cache-refresh-dlq-url"
+      value       = data.terraform_remote_state.async_worker.outputs.cache_refresh_dlq_url
+      description = "Async worker cache refresh DLQ URL."
+    }
+
+    readmodel_refresh_dlq_url = {
+      name        = "/safespot/${var.environment}/async-worker/readmodel-refresh-dlq-url"
+      value       = data.terraform_remote_state.async_worker.outputs.readmodel_refresh_dlq_url
+      description = "Async worker read model refresh DLQ URL."
+    }
+
+    environment_cache_refresh_dlq_url = {
+      name        = "/safespot/${var.environment}/async-worker/environment-cache-refresh-dlq-url"
+      value       = data.terraform_remote_state.async_worker.outputs.environment_cache_refresh_dlq_url
+      description = "Async worker environment cache refresh DLQ URL."
+    }
+
+    cache_refresh_dlq_name = {
+      name        = "/safespot/${var.environment}/async-worker/cache-refresh-dlq-name"
+      value       = data.terraform_remote_state.async_worker.outputs.cache_refresh_dlq_name
+      description = "Async worker cache refresh DLQ name."
+    }
+
+    readmodel_refresh_dlq_name = {
+      name        = "/safespot/${var.environment}/async-worker/readmodel-refresh-dlq-name"
+      value       = data.terraform_remote_state.async_worker.outputs.readmodel_refresh_dlq_name
+      description = "Async worker read model refresh DLQ name."
+    }
+
+    environment_cache_refresh_dlq_name = {
+      name        = "/safespot/${var.environment}/async-worker/environment-cache-refresh-dlq-name"
+      value       = data.terraform_remote_state.async_worker.outputs.environment_cache_refresh_dlq_name
+      description = "Async worker environment cache refresh DLQ name."
+    }
+
+    event_dlq_url = {
+      name        = "/safespot/${var.environment}/async-worker/event-dlq-url"
+      value       = data.terraform_remote_state.async_worker.outputs.cache_refresh_dlq_url
+      description = "Async worker event DLQ URL (backward compat alias for cache-refresh-dlq-url)."
+    }
+
+    event_dlq_name = {
+      name        = "/safespot/${var.environment}/async-worker/event-dlq-name"
+      value       = data.terraform_remote_state.async_worker.outputs.cache_refresh_dlq_name
+      description = "Async worker event DLQ name (backward compat alias for cache-refresh-dlq-name)."
+    }
+
     eks_core_cluster_name = {
       name        = "/safespot/${var.environment}/api-service/eks-core/cluster-name"
       value       = data.terraform_remote_state.eks_core.outputs.cluster_name
@@ -178,7 +226,45 @@ locals {
       value       = data.terraform_remote_state.ops.outputs.grafana_irsa_role_arn
       description = "Grafana CloudWatch datasource IRSA role ARN from ops remote state"
     }
+
+    aurora_cluster_identifier = {
+      name        = "/safespot/${var.environment}/data/aurora-cluster-identifier"
+      value       = data.terraform_remote_state.data.outputs.aurora_cluster_identifier
+      description = "Aurora cluster identifier for CloudWatch dimension."
+    }
+
+    redis_replication_group_id = {
+      name        = "/safespot/${var.environment}/data/redis-replication-group-id"
+      value       = data.terraform_remote_state.data.outputs.redis_replication_group_id
+      description = "Redis replication group ID for CloudWatch dimension."
+    }
+
+    lambda_function_name = {
+      name        = "/safespot/${var.environment}/async-worker/lambda-function-name"
+      value       = data.terraform_remote_state.async_worker.outputs.lambda_function_name
+      description = "Async-worker Lambda function name for CloudWatch FunctionName dimension."
+    }
   }
+
+  # Optional parameters: only included when the variable is non-empty.
+  # ALB and TargetGroup ARN suffixes are created by AWS Load Balancer Controller (K8s Ingress),
+  # not by Terraform, so they must be supplied manually after the controller creates them.
+  optional_string_parameters = merge(
+    var.alb_arn_suffix != "" ? {
+      alb_arn_suffix = {
+        name        = "/safespot/${var.environment}/front-edge/alb-arn-suffix"
+        value       = var.alb_arn_suffix
+        description = "ALB ARN suffix for CloudWatch metrics."
+      }
+    } : {},
+    var.api_target_group_arn_suffix != "" ? {
+      api_target_group_arn_suffix = {
+        name        = "/safespot/${var.environment}/front-edge/api-target-group-arn-suffix"
+        value       = var.api_target_group_arn_suffix
+        description = "API TargetGroup ARN suffix for CloudWatch metrics."
+      }
+    } : {},
+  )
 
   secure_parameter_paths = {
     rds_username = {
