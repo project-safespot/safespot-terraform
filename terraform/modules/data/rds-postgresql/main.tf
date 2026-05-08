@@ -55,7 +55,7 @@ resource "aws_rds_cluster" "main" {
   db_cluster_parameter_group_name = aws_rds_cluster_parameter_group.main.name
 
   storage_encrypted  = true
-  availability_zones = var.availability_zones
+
 
   backup_retention_period      = var.backup_retention_period
   preferred_backup_window      = "03:00-04:00"
