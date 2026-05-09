@@ -35,3 +35,9 @@ variable "api_target_group_arn_suffix" {
   type        = string
   default     = ""
 }
+
+variable "ops_state_key" {
+  description = "S3 object key for ops Terraform state."
+  type        = string
+  default     = "environments/dev/ops/terraform.tfstate"
+}

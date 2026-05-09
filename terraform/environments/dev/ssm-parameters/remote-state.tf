@@ -57,3 +57,13 @@ data "terraform_remote_state" "ops" {
     region = var.aws_region
   }
 }
+
+data "terraform_remote_state" "ops" {
+  backend = "s3"
+
+  config = {
+    bucket = var.remote_state_bucket
+    key    = var.ops_state_key
+    region = var.aws_region
+  }
+}
