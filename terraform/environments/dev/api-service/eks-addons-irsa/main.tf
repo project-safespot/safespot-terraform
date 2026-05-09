@@ -98,6 +98,30 @@ resource "aws_iam_policy" "external_secrets" {
 }
 
 # ============================================================
+# AWS EBS CSI Driver IRSA
+# ============================================================
+module "ebs_csi_irsa" {
+  source = "../../../../modules/api-service/eks-irsa"
+
+  role_name            = local.ebs_csi_role_name
+  oidc_provider_arn    = local.oidc_provider_arn
+  oidc_provider        = local.oidc_provider
+  namespace            = var.ebs_csi_namespace
+  service_account_name = var.ebs_csi_service_account_name
+
+  managed_policy_arns = {
+    ebs_csi = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+  }
+
+  inline_policy_json = null
+
+  tags = merge(local.common_tags, {
+    Workload  = "aws-ebs-csi-driver"
+    Namespace = var.ebs_csi_namespace
+  })
+}
+
+# ============================================================
 # External Secrets Operator IRSA
 # ============================================================
 module "external_secrets_irsa" {

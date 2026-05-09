@@ -1,4 +1,22 @@
 # ============================================================
+# AWS EBS CSI Driver Outputs
+# ============================================================
+output "ebs_csi_irsa_role_name" {
+  description = "Name of the IRSA IAM role for AWS EBS CSI Driver"
+  value       = module.ebs_csi_irsa.role_name
+}
+
+output "ebs_csi_irsa_role_arn" {
+  description = "ARN of the IRSA IAM role for AWS EBS CSI Driver"
+  value       = module.ebs_csi_irsa.role_arn
+}
+
+output "ebs_csi_service_account_subject" {
+  description = "OIDC subject for the AWS EBS CSI Driver service account"
+  value       = module.ebs_csi_irsa.service_account_subject
+}
+
+# ============================================================
 # ExternalDNS Outputs
 # ============================================================
 output "external_dns_policy_arn" {
