@@ -3,7 +3,6 @@ locals {
   component = "eks-addons"
 
   cluster_name          = data.terraform_remote_state.eks_core.outputs.cluster_name
-  cluster_endpoint      = data.terraform_remote_state.eks_core.outputs.cluster_endpoint
   ebs_csi_irsa_role_arn = data.terraform_remote_state.eks_addons_irsa.outputs.ebs_csi_irsa_role_arn
 
   common_tags = {
