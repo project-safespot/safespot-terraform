@@ -196,9 +196,58 @@ resource "aws_flow_log" "main" {
 #     Name = "${var.project}-${var.environment}-network-vpc-flow-log"
 #   })
 # }
+<<<<<<< HEAD
 =======
   tags = merge(var.common_tags, {
     Name = "${var.project}-${var.environment}-network-vpc-flow-log"
   })
 }
 >>>>>>> origin/infra/network
+=======
+
+# resource "aws_iam_role" "flow_log" {
+#   name = "${var.project}-${var.environment}-network-vpc-flow-log-role"
+
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [{
+#       Action    = "sts:AssumeRole"
+#       Effect    = "Allow"
+#       Principal = { Service = "vpc-flow-logs.amazonaws.com" }
+#     }]
+#   })
+
+#   tags = var.common_tags
+# }
+
+# resource "aws_iam_role_policy" "flow_log" {
+#   name = "${var.project}-${var.environment}-network-vpc-flow-log-policy"
+#   role = aws_iam_role.flow_log.id
+
+#   policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [{
+#       Effect = "Allow"
+#       Action = [
+#         "logs:CreateLogGroup",
+#         "logs:CreateLogStream",
+#         "logs:PutLogEvents",
+#         "logs:DescribeLogGroups",
+#         "logs:DescribeLogStreams"
+#       ]
+#       Resource = "*"
+#     }]
+#   })
+# }
+
+# resource "aws_flow_log" "main" {
+#   vpc_id          = aws_vpc.main.id
+#   traffic_type    = "ALL"
+#   iam_role_arn    = aws_iam_role.flow_log.arn
+#   log_destination = aws_cloudwatch_log_group.flow_log.arn
+
+#   tags = merge(var.common_tags, {
+#     Name = "${var.project}-${var.environment}-network-vpc-flow-log"
+#   })
+# }
+>>>>>>> origin/infra/data

@@ -163,6 +163,9 @@ resource "aws_security_group_rule" "redis_from_eks" {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> origin/infra/data
 # Lambda Security Group
 resource "aws_security_group" "lambda" {
   name        = "${var.project}-${var.environment}-network-sg-lambda"
@@ -180,6 +183,7 @@ resource "aws_security_group" "lambda" {
   tags = merge(var.common_tags, {
     Name = "${var.project}-${var.environment}-network-sg-lambda"
   })
+<<<<<<< HEAD
 =======
 # Lambda egress rules
 resource "aws_security_group_rule" "lambda_to_external_443" {
@@ -191,6 +195,8 @@ resource "aws_security_group_rule" "lambda_to_external_443" {
   security_group_id = aws_security_group.lambda.id
   cidr_blocks       = ["0.0.0.0/0"]
 >>>>>>> origin/infra/network
+=======
+>>>>>>> origin/infra/data
 }
 
 # Lambda → RDS
@@ -198,12 +204,17 @@ resource "aws_security_group_rule" "lambda_to_rds" {
   type                     = "egress"
   description              = "Lambda to RDS"
 <<<<<<< HEAD
+<<<<<<< HEAD
   from_port                = 3306
   to_port                  = 3306
 =======
   from_port                = 5432
   to_port                  = 5432
 >>>>>>> origin/infra/network
+=======
+  from_port                = 3306
+  to_port                  = 3306
+>>>>>>> origin/infra/data
   protocol                 = "tcp"
   security_group_id        = aws_security_group.lambda.id
   source_security_group_id = aws_security_group.rds.id
@@ -213,12 +224,17 @@ resource "aws_security_group_rule" "rds_from_lambda" {
   type                     = "ingress"
   description              = "Lambda to RDS"
 <<<<<<< HEAD
+<<<<<<< HEAD
   from_port                = 3306
   to_port                  = 3306
 =======
   from_port                = 5432
   to_port                  = 5432
 >>>>>>> origin/infra/network
+=======
+  from_port                = 3306
+  to_port                  = 3306
+>>>>>>> origin/infra/data
   protocol                 = "tcp"
   security_group_id        = aws_security_group.rds.id
   source_security_group_id = aws_security_group.lambda.id

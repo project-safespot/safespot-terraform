@@ -12,6 +12,7 @@ output "ecr_dkr_endpoint_id" {
   description = "ECR DKR VPC Endpoint ID"
   value       = aws_vpc_endpoint.ecr_dkr.id
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 }
 
@@ -29,4 +30,6 @@ output "ec2messages_endpoint_id" {
   description = "EC2 Messages VPC Endpoint ID"
   value       = aws_vpc_endpoint.ec2messages.id
 >>>>>>> origin/infra/network
+=======
+>>>>>>> origin/infra/data
 }

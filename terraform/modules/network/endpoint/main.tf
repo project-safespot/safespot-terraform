@@ -93,6 +93,7 @@ resource "aws_vpc_endpoint" "sqs" {
     Name = "${var.project}-${var.environment}-network-vpc-endpoint-sqs"
   })
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 }
 
@@ -134,4 +135,6 @@ resource "aws_vpc_endpoint" "ec2messages" {
     Name = "${var.project}-${var.environment}-network-vpc-endpoint-ec2messages"
   })
 >>>>>>> origin/infra/network
+=======
+>>>>>>> origin/infra/data
 }
