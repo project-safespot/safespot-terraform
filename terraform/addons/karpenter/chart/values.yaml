@@ -30,10 +30,14 @@ nodeClass:
     ManagedBy: karpenter
 
 nodePools:
+  # Default pool is disabled — system/ops/app workloads are handled by MNG.
+  # Enable via values override only if a general Karpenter pool is needed.
   default:
-    enabled: true
-    # Node label applied by the NodePool template (used by app nodeSelector)
-    nodeLabel: workload
+    enabled: false
+    labels:
+      role: workload
+      safespot.io/node-group: karpenter-default
+      safespot.io/workload-class: workload
     requirements:
       arch: [amd64]
       os: [linux]
@@ -47,22 +51,28 @@ nodePools:
       consolidationPolicy: WhenEmptyOrUnderutilized
       consolidateAfter: 1m
 
+  # public-surge pool: api-public-read burst/surge 전용
   apiPublicRead:
     enabled: true
-    nodeLabel: api-public-read
+    labels:
+      # role은 과도기 호환용 — application manifest가 safespot.io/* nodeSelector로 전환 완료 후 제거
+      role: api-public-read
+      safespot.io/node-group: public-surge
+      safespot.io/workload-class: public
     taint:
-      key: workload
-      value: api-public-read
+      key: safespot.io/dedicated
+      value: public-surge
       effect: NoSchedule
     requirements:
       arch: [amd64]
       os: [linux]
       capacityType: [spot]
+      # capacityType: [spot, on-demand]  # spot 수급 불안정 시 on-demand 추가
       instanceCategory: [c, m]
       instanceGeneration: "2"
     limits:
-      cpu: "200"
-      memory: 400Gi
+      cpu: "16"
+      memory: 32Gi
     disruption:
       consolidationPolicy: WhenEmpty
       consolidateAfter: 5m

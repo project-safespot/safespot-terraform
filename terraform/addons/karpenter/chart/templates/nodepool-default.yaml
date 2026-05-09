@@ -9,7 +9,7 @@ spec:
   template:
     metadata:
       labels:
-        role: {{ .Values.nodePools.default.nodeLabel }}
+        {{- toYaml .Values.nodePools.default.labels | nindent 8 }}
     spec:
       nodeClassRef:
         group: karpenter.k8s.aws
