@@ -43,6 +43,11 @@ output "fluentbit_irsa_role_name" {
   value       = var.enable_fluentbit_irsa ? module.fluentbit_irsa[0].role_name : null
 }
 
+output "fluentbit_irsa_subject" {
+  description = "Kubernetes service account subject used by Fluent Bit IRSA trust policy."
+  value       = var.enable_fluentbit_irsa ? module.fluentbit_irsa[0].service_account_subject : null
+}
+
 output "fluentbit_cloudwatch_write_policy_arn" {
   description = "Fluent Bit CloudWatch Logs write 전용 IAM Policy ARN. enable_fluentbit_irsa = false 이면 null 반환"
   value       = var.enable_fluentbit_irsa ? aws_iam_policy.fluentbit_cloudwatch_write[0].arn : null

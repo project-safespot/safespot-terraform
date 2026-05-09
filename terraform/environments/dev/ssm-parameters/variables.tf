@@ -35,3 +35,9 @@ variable "data_state_key" {
   type        = string
   default     = "environments/dev/data/terraform.tfstate"
 }
+
+variable "ops_state_key" {
+  description = "S3 object key for ops Terraform state."
+  type        = string
+  default     = "environments/dev/ops/terraform.tfstate"
+}

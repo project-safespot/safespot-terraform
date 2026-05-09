@@ -1,12 +1,13 @@
 module "ssm_parameters" {
   source = "../../../modules/ssm-parameters"
 
-  project = var.project
-  env     = var.env
+  project     = var.project
+  environment = var.env
 
   parameters = merge(
     var.ssm_parameters,
-    local.remote_state_parameters
+    local.remote_state_parameters,
+    local.ops_ssm_parameters
   )
 
   use_custom_kms_key = false

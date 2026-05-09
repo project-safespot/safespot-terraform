@@ -17,6 +17,7 @@ variable "edge_sns_topic_arn" {
   type        = string
 }
 
+
 variable "alb_arn_suffix" {
   description = "ALB ARN suffix. 형식: app/{alb-name}/{id}."
   type        = string
