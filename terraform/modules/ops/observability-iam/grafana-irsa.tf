@@ -67,18 +67,18 @@ resource "aws_ssm_parameter" "grafana_irsa_role_arn" {
   }
 }
 
-resource "aws_ssm_parameter" "yace_irsa_role_arn" {
-  count = var.enable_yace_irsa ? 1 : 0
+resource "aws_ssm_parameter" "grafana_irsa_role_arn" {
+  count = var.enable_grafana_irsa ? 1 : 0
 
-  name        = "/${var.project}/${var.environment}/observability/yace/irsa-role-arn"
-  description = "YACE IRSA Role ARN for CloudWatch metrics read"
+  name        = "/${var.project}/${var.environment}/observability/grafana/irsa-role-arn"
+  description = "Grafana IRSA Role ARN for CloudWatch datasource"
   type        = "String"
-  value       = module.yace_irsa[0].role_arn
+  value       = module.grafana_irsa[0].role_arn
 
   overwrite = true
 
   tags = {
-    Name    = "/${var.project}/${var.environment}/observability/yace/irsa-role-arn"
-    Purpose = "yace-irsa-role-arn"
+    Name    = "/${var.project}/${var.environment}/observability/grafana/irsa-role-arn"
+    Purpose = "grafana-irsa-role-arn"
   }
 }

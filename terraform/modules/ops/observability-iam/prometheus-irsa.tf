@@ -12,3 +12,19 @@ module "prometheus_irsa" {
     cloudwatch_read = aws_iam_policy.cloudwatch_read[0].arn
   }
 }
+
+resource "aws_ssm_parameter" "prometheus_irsa_role_arn" {
+  count = var.enable_prometheus_irsa ? 1 : 0
+
+  name        = "/${var.project}/${var.environment}/observability/prometheus/irsa-role-arn"
+  description = "Prometheus IRSA Role ARN for CloudWatch metrics read"
+  type        = "String"
+  value       = module.prometheus_irsa[0].role_arn
+
+  overwrite = true
+
+  tags = {
+    Name    = "/${var.project}/${var.environment}/observability/prometheus/irsa-role-arn"
+    Purpose = "prometheus-irsa-role-arn"
+  }
+}
