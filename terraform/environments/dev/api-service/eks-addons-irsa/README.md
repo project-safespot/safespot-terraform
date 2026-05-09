@@ -19,6 +19,7 @@
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_ebs_csi_irsa"></a> [ebs\_csi\_irsa](#module\_ebs\_csi\_irsa) | ../../../../modules/api-service/eks-irsa | n/a |
 | <a name="module_external_dns_irsa"></a> [external\_dns\_irsa](#module\_external\_dns\_irsa) | ../../../../modules/api-service/eks-irsa | n/a |
 | <a name="module_external_secrets_irsa"></a> [external\_secrets\_irsa](#module\_external\_secrets\_irsa) | ../../../../modules/api-service/eks-irsa | n/a |
 
@@ -40,6 +41,8 @@
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | AWS region | `string` | n/a | yes |
+| <a name="input_ebs_csi_namespace"></a> [ebs\_csi\_namespace](#input\_ebs\_csi\_namespace) | Kubernetes namespace for AWS EBS CSI Driver | `string` | `"kube-system"` | no |
+| <a name="input_ebs_csi_service_account_name"></a> [ebs\_csi\_service\_account\_name](#input\_ebs\_csi\_service\_account\_name) | Kubernetes service account name for AWS EBS CSI Driver controller | `string` | `"ebs-csi-controller-sa"` | no |
 | <a name="input_eks_core_state_key"></a> [eks\_core\_state\_key](#input\_eks\_core\_state\_key) | S3 object key for EKS core Terraform state | `string` | n/a | yes |
 | <a name="input_env"></a> [env](#input\_env) | Environment name | `string` | n/a | yes |
 | <a name="input_external_dns_namespace"></a> [external\_dns\_namespace](#input\_external\_dns\_namespace) | Kubernetes namespace for ExternalDNS | `string` | `"external-dns"` | no |
@@ -54,6 +57,9 @@
 
 | Name | Description |
 |------|-------------|
+| <a name="output_ebs_csi_irsa_role_arn"></a> [ebs\_csi\_irsa\_role\_arn](#output\_ebs\_csi\_irsa\_role\_arn) | ARN of the IRSA IAM role for AWS EBS CSI Driver |
+| <a name="output_ebs_csi_irsa_role_name"></a> [ebs\_csi\_irsa\_role\_name](#output\_ebs\_csi\_irsa\_role\_name) | Name of the IRSA IAM role for AWS EBS CSI Driver |
+| <a name="output_ebs_csi_service_account_subject"></a> [ebs\_csi\_service\_account\_subject](#output\_ebs\_csi\_service\_account\_subject) | OIDC subject for the AWS EBS CSI Driver service account |
 | <a name="output_external_dns_irsa_role_arn"></a> [external\_dns\_irsa\_role\_arn](#output\_external\_dns\_irsa\_role\_arn) | ARN of the IRSA IAM role for ExternalDNS |
 | <a name="output_external_dns_irsa_role_name"></a> [external\_dns\_irsa\_role\_name](#output\_external\_dns\_irsa\_role\_name) | Name of the IRSA IAM role for ExternalDNS |
 | <a name="output_external_dns_policy_arn"></a> [external\_dns\_policy\_arn](#output\_external\_dns\_policy\_arn) | ARN of the IAM policy for ExternalDNS |

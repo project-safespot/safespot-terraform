@@ -12,6 +12,8 @@ locals {
   external_secrets_role_name   = "${var.project}-${var.env}-external-secrets-irsa"
   external_secrets_policy_name = "${var.project}-${var.env}-external-secrets-policy"
 
+  ebs_csi_role_name = "${var.project}-${var.env}-ebs-csi-irsa"
+
   common_tags = {
     Project     = var.project
     Environment = var.env

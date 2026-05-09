@@ -53,3 +53,15 @@ variable "external_secrets_service_account_name" {
   type        = string
   default     = "external-secrets"
 }
+
+variable "ebs_csi_namespace" {
+  description = "Kubernetes namespace for AWS EBS CSI Driver"
+  type        = string
+  default     = "kube-system"
+}
+
+variable "ebs_csi_service_account_name" {
+  description = "Kubernetes service account name for AWS EBS CSI Driver controller"
+  type        = string
+  default     = "ebs-csi-controller-sa"
+}
