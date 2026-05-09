@@ -66,19 +66,3 @@ resource "aws_ssm_parameter" "grafana_irsa_role_arn" {
   Purpose = "grafana-irsa-role-arn"
   }
 }
-
-resource "aws_ssm_parameter" "grafana_irsa_role_arn" {
-  count = var.enable_grafana_irsa ? 1 : 0
-
-  name        = "/${var.project}/${var.environment}/observability/grafana/irsa-role-arn"
-  description = "Grafana IRSA Role ARN for CloudWatch datasource"
-  type        = "String"
-  value       = module.grafana_irsa[0].role_arn
-
-  overwrite = true
-
-  tags = {
-    Name    = "/${var.project}/${var.environment}/observability/grafana/irsa-role-arn"
-    Purpose = "grafana-irsa-role-arn"
-  }
-}
