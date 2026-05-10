@@ -23,7 +23,9 @@ resource "aws_iam_policy" "ecr_push" {
           "ecr:PutImage",
           "ecr:UploadLayerPart",
           "ecr:BatchGetImage",
-          "ecr:GetDownloadUrlForLayer"
+          "ecr:GetDownloadUrlForLayer",
+          "ecr:DescribeRepositories",
+          "ecr:DescribeImages",
         ]
         Resource = values(var.ecr_repository_arns)
       }

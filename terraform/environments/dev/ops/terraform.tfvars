@@ -9,6 +9,7 @@ services = [
   "api-public-read",
   "external-ingestion",
   "async-worker",
+  "scenario-simulator",
 ]
 
 log_retention_days = 30
