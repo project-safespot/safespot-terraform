@@ -7,6 +7,7 @@ locals {
     "api-core",
     "api-public-read",
     "external-ingestion",
+    "pre-scaling-controller",
   ]
 
   log_retention_days = 30
