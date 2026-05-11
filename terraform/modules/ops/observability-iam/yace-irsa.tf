@@ -15,7 +15,9 @@ resource "aws_iam_policy" "yace_cloudwatch_read" {
           "cloudwatch:GetMetricStatistics",
           "cloudwatch:ListMetrics",
           "cloudwatch:DescribeAlarms",
-          "cloudwatch:DescribeAlarmsForMetric"
+          "cloudwatch:DescribeAlarmsForMetric",
+          "tag:GetResources",
+          "iam:ListAccountAliases"
         ]
         Resource = "*"
       },
