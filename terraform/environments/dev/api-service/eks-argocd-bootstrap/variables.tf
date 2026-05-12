@@ -55,3 +55,29 @@ variable "addons_path" {
   type        = string
   default     = "argocd"
 }
+
+variable "argocd_node_selector" {
+  description = "Node selector applied to all ArgoCD components to pin them to system nodes."
+  type        = map(string)
+  default = {
+    "safespot.io/node-group" = "ops"
+  }
+}
+
+variable "argocd_tolerations" {
+  description = "Tolerations applied to all ArgoCD components for the system node taint."
+  type = list(object({
+    key      = string
+    operator = string
+    value    = optional(string)
+    effect   = string
+  }))
+  default = [
+    {
+      key      = "safespot.io/dedicated"
+      operator = "Equal"
+      value    = "ops"
+      effect   = "NoSchedule"
+    }
+  ]
+}

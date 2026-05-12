@@ -4,3 +4,4 @@
 crash.log
 .aws/
 .env
+tfplan
