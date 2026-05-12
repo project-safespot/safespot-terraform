@@ -369,10 +369,19 @@ variable "cloudwatch_log_retention_days" {
   default     = 365
 }
 
+variable "cloudfront_log_retention_days" {
+  description = "CloudFront 접근 로그 보존 기간 (일)."
+  type        = number
+  default     = 30
+}
+
+
 variable "cloudfront_distribution_id" {
   type    = string
   default = ""
 }
+
+
 
 variable "waf_acl_name" {
   description = "WAF Web ACL name. CloudWatch WAFV2 metric dimension WebACL에 사용"

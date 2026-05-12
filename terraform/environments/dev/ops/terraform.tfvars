@@ -9,6 +9,8 @@ services = [
   "api-public-read",
   "external-ingestion",
   "async-worker",
+  "pre-scaling-controller",
+  "scenario-simulator",
 ]
 
 log_retention_days = 30
@@ -19,13 +21,15 @@ alb_arn_suffix = "app/k8s-safespotdevapi-00c466700d/e7b7aa08dfee8e6e"
 
 enable_observability_iam = true
 # 아래 세 플래그는 실제 ServiceAccount annotation 적용(Helm values/ArgoCD app) 확정 후 활성화
-enable_fluentbit_irsa  = false
-enable_prometheus_irsa = false
-enable_grafana_irsa    = true
-enable_yace_irsa       = true
+enable_fluentbit_irsa = true
+enable_grafana_irsa   = true
+enable_yace_irsa      = true
 
 grafana_namespace            = "monitoring"
 grafana_service_account_name = "safespot-grafana"
 
 yace_namespace            = "monitoring"
 yace_service_account_name = "safespot-yace"
+
+fluentbit_namespace            = "monitoring"
+fluentbit_service_account_name = "safespot-fluent-bit"
