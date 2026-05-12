@@ -3,4 +3,4 @@
 *.tfstate.*
 crash.log
 .aws/
-.env
+.envinfra-eks-ssm/
