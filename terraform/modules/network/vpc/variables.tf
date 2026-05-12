@@ -38,3 +38,9 @@ variable "common_tags" {
   type        = map(string)
 }
 
+variable "kms_key_arn" {
+  description = "KMS Key ARN for CloudWatch Log Group encryption (optional)"
+  type        = string
+  default     = null
+}
+

@@ -33,7 +33,9 @@ module "endpoint" {
 
   private_app_subnet_ids      = module.vpc.private_app_subnet_ids
   private_app_route_table_ids = module.vpc.private_app_route_table_ids
+  private_db_route_table_ids  = module.vpc.private_db_route_table_ids
   eks_node_sg_id              = module.sg.eks_node_sg_id
+  lambda_sg_id                = module.sg.lambda_sg_id
 
   common_tags = local.common_tags
 }

@@ -143,7 +143,8 @@ resource "aws_route_table_association" "private_db" {
 
 resource "aws_cloudwatch_log_group" "flow_log" {
   name              = "/${var.project}/${var.environment}/vpc/flow-log"
-  retention_in_days = 30
+  retention_in_days = 90
+  kms_key_id        = var.kms_key_arn
 
   tags = merge(var.common_tags, {
     Name = "${var.project}-${var.environment}-network-vpc-flow-log"
@@ -180,7 +181,10 @@ resource "aws_iam_role_policy" "flow_log" {
         "logs:DescribeLogGroups",
         "logs:DescribeLogStreams"
       ]
-      Resource = "*"
+      Resource = [
+        aws_cloudwatch_log_group.flow_log.arn,
+        "${aws_cloudwatch_log_group.flow_log.arn}:*"
+      ]
     }]
   })
 }

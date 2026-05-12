@@ -1,3 +1,7 @@
+data "aws_ec2_managed_prefix_list" "cloudfront" {
+  name = "com.amazonaws.global.cloudfront.origin-facing"
+}
+
 # ALB Security Group
 resource "aws_security_group" "alb" {
   name        = "${var.project}-${var.environment}-network-sg-alb"
@@ -5,15 +9,15 @@ resource "aws_security_group" "alb" {
   vpc_id      = var.vpc_id
 
   ingress {
-    description = "HTTP"
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    description     = "HTTPS from CloudFront"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.cloudfront.id]
   }
 
   ingress {
-    description = "HTTPS"
+    description = "HTTPS direct (load test)"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -37,6 +41,10 @@ resource "aws_security_group" "eks_node" {
     to_port     = 0
     protocol    = "-1"
     self        = true
+  }
+
+  lifecycle {
+    ignore_changes = [ingress]
   }
 
   tags = merge(var.common_tags, {
@@ -102,6 +110,16 @@ resource "aws_security_group_rule" "eks_node_from_alb" {
 }
 
 # EKS Node egress rules
+resource "aws_security_group_rule" "eks_node_to_external_8088" {
+  type              = "egress"
+  description       = "EKS node to Seoul public API (8088)"
+  from_port         = 8088
+  to_port           = 8088
+  protocol          = "tcp"
+  security_group_id = aws_security_group.eks_node.id
+  cidr_blocks       = ["0.0.0.0/0"]
+}
+
 resource "aws_security_group_rule" "eks_node_to_external_443" {
   type              = "egress"
   description       = "Node to external (NAT Gateway)"
@@ -112,15 +130,6 @@ resource "aws_security_group_rule" "eks_node_to_external_443" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-resource "aws_security_group_rule" "eks_node_to_external_8088" {
-  type              = "egress"
-  description       = "EKS node to external 8088 (test)"
-  from_port         = 8088
-  to_port           = 8088
-  protocol          = "tcp"
-  security_group_id = aws_security_group.eks_node.id
-  cidr_blocks       = ["0.0.0.0/0"]
-}
 
 resource "aws_security_group_rule" "eks_node_to_rds" {
   type                     = "egress"
