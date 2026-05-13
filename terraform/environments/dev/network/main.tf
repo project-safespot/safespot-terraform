@@ -10,6 +10,9 @@ module "vpc" {
   private_db_subnet_cidrs  = var.private_db_subnet_cidrs
   availability_zones       = var.availability_zones
 
+  flow_log_s3_bucket_arn = var.flow_log_s3_bucket_arn
+  flow_log_s3_prefix     = var.flow_log_s3_prefix
+
   common_tags = local.common_tags
 }
 

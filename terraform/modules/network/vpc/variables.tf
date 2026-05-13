@@ -44,3 +44,13 @@ variable "kms_key_arn" {
   default     = null
 }
 
+variable "flow_log_s3_bucket_arn" {
+  description = "S3 bucket ARN for VPC Flow Logs."
+  type        = string
+}
+
+variable "flow_log_s3_prefix" {
+  description = "S3 prefix for VPC Flow Logs."
+  type        = string
+  default     = "vpc-flow-logs/"
+}
