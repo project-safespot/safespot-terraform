@@ -51,3 +51,14 @@ variable "route53_zone_id" {
   description = "Route53 Zone ID"
   type        = string
 }
+
+variable "cloudfront_log_bucket_domain_name" {
+  description = "S3 bucket domain name for CloudFront standard access logs."
+  type        = string
+}
+
+variable "cloudfront_log_prefix" {
+  description = "Prefix for CloudFront access logs in S3."
+  type        = string
+  default     = "cloudfront/"
+}

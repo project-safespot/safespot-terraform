@@ -68,11 +68,14 @@ module "cloudfront" {
   bucket_arn                  = module.s3.bucket_arn
   bucket_regional_domain_name = module.s3.bucket_regional_domain_name
 
-  acm_certificate_arn    = module.acm.certificate_arn
-  waf_acl_arn            = module.waf.waf_acl_arn
+  acm_certificate_arn = module.acm.certificate_arn
+  waf_acl_arn         = module.waf.waf_acl_arn
 
   api_origin_domain_name = "api-origin.safespot.site"
   route53_zone_id        = module.route53.zone_id
+
+  cloudfront_log_bucket_domain_name = "safespot-dev-ops-logs.s3.amazonaws.com"
+  cloudfront_log_prefix             = "cloudfront/"
 
   common_tags = local.common_tags
 }

@@ -40,6 +40,12 @@ resource "aws_cloudfront_distribution" "main" {
   web_acl_id          = var.waf_acl_arn
   price_class         = "PriceClass_200"
 
+  logging_config {
+    bucket          = var.cloudfront_log_bucket_domain_name
+    prefix          = var.cloudfront_log_prefix
+    include_cookies = false
+  }
+
   # Origin 1 — S3 (정적 파일)
   origin {
     origin_id                = "S3-frontend"
@@ -101,6 +107,7 @@ resource "aws_cloudfront_distribution" "main" {
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
+    compress               = true
     cache_policy_id        = aws_cloudfront_cache_policy.weather.id
   }
 
@@ -111,6 +118,7 @@ resource "aws_cloudfront_distribution" "main" {
     viewer_protocol_policy = "redirect-to-https"
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
+    compress               = true
     cache_policy_id        = aws_cloudfront_cache_policy.air.id
   }
 
@@ -156,6 +164,7 @@ resource "aws_cloudfront_cache_policy" "shelters" {
   default_ttl = 30
   min_ttl     = 0
   max_ttl     = 60
+  
 
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config { cookie_behavior = "none" }
