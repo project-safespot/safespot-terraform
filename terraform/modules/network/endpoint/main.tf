@@ -1,9 +1,36 @@
+# Endpoint 전용 Security Group
+resource "aws_security_group" "endpoint" {
+  name        = "${var.project}-${var.environment}-network-sg-endpoint"
+  description = "VPC Endpoint Security Group"
+  vpc_id      = var.vpc_id
+
+  ingress {
+    description     = "HTTPS from EKS Node"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [var.eks_node_sg_id]
+  }
+
+  ingress {
+    description     = "HTTPS from Lambda"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
+    security_groups = [var.lambda_sg_id]
+  }
+
+  tags = merge(var.common_tags, {
+    Name = "${var.project}-${var.environment}-network-sg-endpoint"
+  })
+}
+
 # S3 Gateway Endpoint
 resource "aws_vpc_endpoint" "s3" {
   vpc_id            = var.vpc_id
   service_name      = "com.amazonaws.ap-northeast-2.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = var.private_app_route_table_ids
+  route_table_ids   = concat(var.private_app_route_table_ids, var.private_db_route_table_ids)
 
   tags = merge(var.common_tags, {
     Name = "${var.project}-${var.environment}-network-vpc-endpoint-s3"
@@ -16,7 +43,7 @@ resource "aws_vpc_endpoint" "ecr_api" {
   service_name        = "com.amazonaws.ap-northeast-2.ecr.api"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_app_subnet_ids
-  security_group_ids  = [var.eks_node_sg_id]
+  security_group_ids  = [aws_security_group.endpoint.id]
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
@@ -30,7 +57,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
   service_name        = "com.amazonaws.ap-northeast-2.ecr.dkr"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_app_subnet_ids
-  security_group_ids  = [var.eks_node_sg_id]
+  security_group_ids  = [aws_security_group.endpoint.id]
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
@@ -44,7 +71,7 @@ resource "aws_vpc_endpoint" "cloudwatch_logs" {
   service_name        = "com.amazonaws.ap-northeast-2.logs"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_app_subnet_ids
-  security_group_ids  = [var.eks_node_sg_id]
+  security_group_ids  = [aws_security_group.endpoint.id]
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
@@ -58,7 +85,7 @@ resource "aws_vpc_endpoint" "sts" {
   service_name        = "com.amazonaws.ap-northeast-2.sts"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_app_subnet_ids
-  security_group_ids  = [var.eks_node_sg_id]
+  security_group_ids  = [aws_security_group.endpoint.id]
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
@@ -72,7 +99,7 @@ resource "aws_vpc_endpoint" "ssm" {
   service_name        = "com.amazonaws.ap-northeast-2.ssm"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_app_subnet_ids
-  security_group_ids  = [var.eks_node_sg_id]
+  security_group_ids  = [aws_security_group.endpoint.id]
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
@@ -86,10 +113,49 @@ resource "aws_vpc_endpoint" "sqs" {
   service_name        = "com.amazonaws.ap-northeast-2.sqs"
   vpc_endpoint_type   = "Interface"
   subnet_ids          = var.private_app_subnet_ids
-  security_group_ids  = [var.eks_node_sg_id]
+  security_group_ids  = [aws_security_group.endpoint.id]
   private_dns_enabled = true
 
   tags = merge(var.common_tags, {
     Name = "${var.project}-${var.environment}-network-vpc-endpoint-sqs"
+  })
+}
+
+# EC2 Interface Endpoint (SSM Session Manager용)
+resource "aws_vpc_endpoint" "ec2" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.ap-northeast-2.ec2"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.private_app_subnet_ids
+  security_group_ids  = [aws_security_group.endpoint.id]
+  private_dns_enabled = true
+  tags = merge(var.common_tags, {
+    Name = "${var.project}-${var.environment}-network-vpc-endpoint-ec2"
+  })
+}
+
+# SSM Messages Interface Endpoint (SSM Session Manager용)
+resource "aws_vpc_endpoint" "ssmmessages" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.ap-northeast-2.ssmmessages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.private_app_subnet_ids
+  security_group_ids  = [aws_security_group.endpoint.id]
+  private_dns_enabled = true
+  tags = merge(var.common_tags, {
+    Name = "${var.project}-${var.environment}-network-vpc-endpoint-ssmmessages"
+  })
+}
+
+# EC2 Messages Interface Endpoint (SSM Session Manager용)
+resource "aws_vpc_endpoint" "ec2messages" {
+  vpc_id              = var.vpc_id
+  service_name        = "com.amazonaws.ap-northeast-2.ec2messages"
+  vpc_endpoint_type   = "Interface"
+  subnet_ids          = var.private_app_subnet_ids
+  security_group_ids  = [aws_security_group.endpoint.id]
+  private_dns_enabled = true
+  tags = merge(var.common_tags, {
+    Name = "${var.project}-${var.environment}-network-vpc-endpoint-ec2messages"
   })
 }
