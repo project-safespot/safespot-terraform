@@ -27,3 +27,8 @@ output "private_app_route_table_ids" {
   description = "Private App Route Table IDs (VPC Endpoint 연결용)"
   value       = aws_route_table.private_app[*].id
 }
+
+output "private_db_route_table_ids" {
+  description = "Private DB Route Table IDs (VPC Endpoint 연결용)"
+  value       = aws_route_table.private_db[*].id
+}

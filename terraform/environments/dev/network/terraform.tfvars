@@ -23,3 +23,6 @@ availability_zones = [
   "ap-northeast-2a",
   "ap-northeast-2c"
 ]
+
+flow_log_s3_bucket_arn = "arn:aws:s3:::safespot-dev-ops-logs"
+flow_log_s3_prefix     = "vpc-flow-logs/"

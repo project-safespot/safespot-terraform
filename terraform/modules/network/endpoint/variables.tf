@@ -28,6 +28,16 @@ variable "eks_node_sg_id" {
   type        = string
 }
 
+variable "lambda_sg_id" {
+  description = "Lambda Security Group ID"
+  type        = string
+}
+
+variable "private_db_route_table_ids" {
+  description = "Private DB Route Table IDs (S3 Gateway Endpoint 연결용)"
+  type        = list(string)
+}
+
 variable "common_tags" {
   description = "Common tags"
   type        = map(string)
