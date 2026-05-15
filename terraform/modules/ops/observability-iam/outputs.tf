@@ -61,8 +61,8 @@ output "yace_irsa_subject" {
 output "irsa_role_arns" {
   description = "생성된 IRSA Role ARN 전체 map. 활성화된 Role만 포함"
   value = {
-    grafana    = var.enable_grafana_irsa ? module.grafana_irsa[0].role_arn : null
-    fluentbit  = var.enable_fluentbit_irsa ? module.fluentbit_irsa[0].role_arn : null
-    yace       = var.enable_yace_irsa ? module.yace_irsa[0].role_arn : null
+    grafana   = var.enable_grafana_irsa ? module.grafana_irsa[0].role_arn : null
+    fluentbit = var.enable_fluentbit_irsa ? module.fluentbit_irsa[0].role_arn : null
+    yace      = var.enable_yace_irsa ? module.yace_irsa[0].role_arn : null
   }
 }

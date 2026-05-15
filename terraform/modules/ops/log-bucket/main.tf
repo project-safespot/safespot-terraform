@@ -76,7 +76,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "log" {
     expiration { days = var.cloudwatch_retention_days }
   }
 
-    rule {
+  rule {
     id     = "cloudfront-expiry"
     status = "Enabled"
 
@@ -147,7 +147,7 @@ data "aws_iam_policy_document" "log" {
     }
   }
 
-    # CloudFront 접근 로그
+  # CloudFront 접근 로그
   statement {
     sid    = "AllowCloudFrontLogs"
     effect = "Allow"
